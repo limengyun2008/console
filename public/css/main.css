@@ -1,0 +1,117 @@
+/**
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    contenteditable attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that are clearfixed.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+.clear-fix:before,
+.clear-fix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clear-fix:after {
+    clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.clear-fix {
+    *zoom: 1;
+}
+
+
+.btn {
+
+}
+
+html {
+    font-family: arial;
+}
+
+header {
+    border-bottom: solid 1px #ccc;
+    line-height:40px;
+}
+header h1{
+    font-size:20px;
+    display: inline-block;
+    float: left;
+    width: 300px;
+}
+header .room-message{
+    float: left;
+}
+
+nav {
+    background: #666;
+}
+
+nav a{
+    color: #fff;
+    padding: 10px 20px;
+    display:inline-block;
+    text-decoration: none;
+}
+
+.main{
+    display: table;
+    width:100%;
+
+}
+
+.splitor{
+    width:6px;
+    display: table-cell;
+    background: #666666;
+    cursor: pointer;
+}
+
+.text-area {
+    width:500px;
+    display: table-cell;
+}
+
+.text-area .text-history {
+    border:solid 1px #ccc;
+    height:342px;
+    overflow-y: auto;
+}
+
+.text-area .text-history p{
+    border-bottom:solid 1px #ccc;
+}
+
+.text-area .text-input {
+    border:solid 1px #ccc;
+    line-height:30px;
+}
+.text-area .text-submit {
+    padding: 0 20px;
+    line-height: 30px;
+    height: 30px;
+}
+
+.video-area{
+    display: table-cell;
+    vertical-align:top;
+
+}
+.video-area .video-container{
+    float:left;
+}
+.video-area .video-container video{
+    width:320px;
+    height:160px;
+    float:left;
+}
+.video-area .video-container .name{
+    text-align: center;
+}
+
+
