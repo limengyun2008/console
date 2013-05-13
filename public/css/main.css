@@ -31,87 +31,9 @@
 }
 
 html {
-    font-family: arial;
+    font-family: arial, sans-serif;
 }
 
-header {
-    border-bottom: solid 1px #ccc;
-    line-height:40px;
-}
-header h1{
-    font-size:20px;
-    display: inline-block;
-    float: left;
-    width: 300px;
-}
-header .room-message{
-    float: left;
-}
 
-nav {
-    background: #666;
-}
-
-nav a{
-    color: #fff;
-    padding: 10px 20px;
-    display:inline-block;
-    text-decoration: none;
-}
-
-.main{
-    display: table;
-    width:100%;
-
-}
-
-.splitor{
-    width:6px;
-    display: table-cell;
-    background: #666666;
-    cursor: pointer;
-}
-
-.text-area {
-    width:500px;
-    display: table-cell;
-}
-
-.text-area .text-history {
-    border:solid 1px #ccc;
-    height:342px;
-    overflow-y: auto;
-}
-
-.text-area .text-history p{
-    border-bottom:solid 1px #ccc;
-}
-
-.text-area .text-input {
-    border:solid 1px #ccc;
-    line-height:30px;
-}
-.text-area .text-submit {
-    padding: 0 20px;
-    line-height: 30px;
-    height: 30px;
-}
-
-.video-area{
-    display: table-cell;
-    vertical-align:top;
-
-}
-.video-area .video-container{
-    float:left;
-}
-.video-area .video-container video{
-    width:320px;
-    height:160px;
-    float:left;
-}
-.video-area .video-container .name{
-    text-align: center;
-}
 
 

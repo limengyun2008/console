@@ -4,6 +4,9 @@ module Console
   class Client
     attr_reader :client
 
+    def initialize(target,token)
+      @client = CFoundry::V2::Client.new(target, token)
+    end
 
     def client=(target, token)
       @client = CFoundry::V2::Client.new(target, token)
