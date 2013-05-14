@@ -10,3 +10,4 @@ gem 'sinatra'
 
 gem 'cfoundry', '=1.0.0' #Cloud Foundry REST API gem
 gem 'grit' #ruby library for git
+gem 'cf-uaa-lib' #ruby library for interact with uaa's token
