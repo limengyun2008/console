@@ -1,19 +1,10 @@
 require "console/version"
+require 'cfoundry'
 
 module Console
-  class Client
-    attr_reader :client
 
-    def initialize(target=nil, token=nil)
-      @client = CFoundry::V2::Client.new(target, token)
-    end
-
-    def client=(target, token)
-      @client = CFoundry::V2::Client.new(target, token)
-      @client
-    end
-
-
+  def cloudfoundry_client(target = "http://api.cloudfoundry.com" , token = nil)
+    CFoundry::V2::Client.new(target, token)
   end
 
 end
