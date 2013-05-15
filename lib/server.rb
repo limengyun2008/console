@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'console'
+require 'json'
 #require 'grit'
 
 
@@ -24,8 +25,6 @@ class Server < Sinatra::Base
 
 
   before do
-    puts "#{params}"
-    puts "#{request.path_info}"
 
     @access_token = request.cookies["access_token"]
     if @access_token
@@ -39,6 +38,7 @@ class Server < Sinatra::Base
       login = false
     end
 
+    login = true
     if !login && request.path_info != '/login'
       redirect to('/login')
     end
@@ -75,13 +75,48 @@ class Server < Sinatra::Base
   end
 
   post '/app/create' do
-
-
-    type = params["type"]
+    buildpack = params["buildpack"]
     name = params["name"]
     domain = params["domain"]
 
-    @client.create_app()
-    redirect to('/app/1')
+    app = @client.app
+    app.name = name
+    app.total_instances = 1 # <- set the number of instances you want
+    app.memory = 512 # <- set the allocated amount of memory
+    app.production = false # <- should the application run in production mode
+    app.buildpack = buildpack # <- set the buildpack
+
+    app.space = client.spaces.first # <- assign the application to a space
+
+    app.create!
+
+    guid = app.guid
+    redirect to("/app/#{guid}")
   end
+
+  get '/app/:guid' do |guid|
+    app = @client.app_by_guid guid
+    erb :app , :locals => {:app => app}
+  end
+
+  get '/api/orgs' do
+    content_type :json
+
+    orgs = @client.orgs_by_manager_guid @client.current_user.guid
+    orgs = { :a => 1, :b => 2}
+    orgs.to_json
+  end
+
+  get '/api/org/:guid' do |guid|
+    content_type :json
+    org = @client.Organization guid
+    {:guid => org.guid, :name => org.name }.to_json
+  end
+
+  get '/api/apps' do
+    content_type :json
+    apps = { :a => 1, :b => 2}
+    apps.to_json
+  end
+
 end
