@@ -4,43 +4,30 @@ require 'json'
 #require 'grit'
 
 
-=begin
-
-#!/usr/bin/env ruby
-require 'uaa'
-token_issuer = CF::UAA::TokenIssuer.new("https://uaa.cloudfoundry.com", "vmc")
-puts token_issuer.prompts.inspect
-token = token_issuer.implicit_grant_with_creds(username: "<your_username>", password: "<your_password>")
-token_info = TokenCoder.decode(token.info["access_token"], nil, nil, false) #token signature not verified
-puts token_info["user_name"]
-
-=end
 
 class Server < Sinatra::Base
 
   include Console
 
   set :root, File.expand_path('../../', __FILE__)
-  #enable :sessions
-
 
   before do
 
     @access_token = request.cookies["access_token"]
     if @access_token
       begin
-        @client = cloudfoundry_client(:token => @access_token)
-        login = client.logged_in?
-      rescue Exception
-        login = false
+        @client = cloudfoundry_client(nil, CFoundry::AuthToken.new(@access_token))
+        login = @client.logged_in?
+      rescue Exception => e
+          puts e
+          login = false
       end
     else
       login = false
     end
 
-    login = true
     if !login && request.path_info != '/login'
-      redirect to('/login')
+      redirect to('/login?redirect=true')
     end
   end
 
@@ -53,15 +40,13 @@ class Server < Sinatra::Base
   end
 
   post '/login' do
-
     username = params['username']
     password = params['password']
 
     @client = cloudfoundry_client()
     access_token = @client.login(username,password)
-
     if access_token
-      response.set_cookie("access_token", :value => access_token )
+      response.set_cookie("access_token", :value => access_token.auth_header.to_s )
       redirect to('/')
     end
   end
@@ -85,10 +70,9 @@ class Server < Sinatra::Base
     app.memory = 512 # <- set the allocated amount of memory
     app.production = false # <- should the application run in production mode
     app.buildpack = buildpack # <- set the buildpack
-
-    app.space = client.spaces.first # <- assign the application to a space
-
     app.create!
+
+    # zhaodch need to code here....
 
     guid = app.guid
     redirect to("/app/#{guid}")
@@ -102,8 +86,8 @@ class Server < Sinatra::Base
   get '/api/orgs' do
     content_type :json
 
-    orgs = @client.orgs_by_manager_guid @client.current_user.guid
-    orgs = { :a => 1, :b => 2}
+    orgs = @client.organizations_by_user_guid @client.current_user.guid
+    puts "#{orgs}"
     orgs.to_json
   end
 
@@ -114,9 +98,34 @@ class Server < Sinatra::Base
   end
 
   get '/api/apps' do
-    content_type :json
-    apps = { :a => 1, :b => 2}
-    apps.to_json
+    nil
   end
 
+end
+
+
+require "cfoundry/v2/model"
+module CFoundry::V2
+  class Organization < Model
+    def to_json(*a)
+      hash = {
+          :name => name,
+          :spaces => spaces,
+      }
+
+      hash.to_json
+    end
+  end
+end
+
+module CFoundry::V2
+  class Space < Model
+    def to_json(*a)
+      hash = {
+          :name => name,
+      }
+
+      hash.to_json
+    end
+  end
 end
