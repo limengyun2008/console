@@ -17,6 +17,7 @@ class Server < Sinatra::Base
     if @access_token
       begin
         @client = cloudfoundry_client(nil, CFoundry::AuthToken.new(@access_token))
+        @current_user = @client.current_user
         login = @client.logged_in?
       rescue Exception => e
           puts e
@@ -26,13 +27,18 @@ class Server < Sinatra::Base
       login = false
     end
 
+
+
     if !login && request.path_info != '/login'
       redirect to('/login?redirect=true')
     end
   end
 
   get '/' do
-    erb :index
+    #puts @client.public_methods
+    orgs = @client.organizations_by_user_guid @client.current_user.guid
+    puts @current_user.public_methods
+    erb :index, :locals => {:orgs => orgs, :current_user => @current_user}
   end
 
   get '/login' do
@@ -52,7 +58,8 @@ class Server < Sinatra::Base
   end
 
   get '/apps' do
-    erb :index
+    orgs = @client.organizations_by_user_guid @client.current_user.guid
+    erb :index, :locals => {:orgs => orgs}
   end
 
   get '/app/create' do
@@ -79,7 +86,7 @@ class Server < Sinatra::Base
   end
 
   get '/app/:guid' do |guid|
-    app = @client.app_by_guid guid
+    app = @client.app guid
     erb :app , :locals => {:app => app}
   end
 
@@ -87,7 +94,7 @@ class Server < Sinatra::Base
     content_type :json
 
     orgs = @client.organizations_by_user_guid @client.current_user.guid
-    puts "#{orgs}"
+    #puts orgs[0].public_methods
     orgs.to_json
   end
 
@@ -95,6 +102,14 @@ class Server < Sinatra::Base
     content_type :json
     org = @client.Organization guid
     {:guid => org.guid, :name => org.name }.to_json
+  end
+
+  get '/api/org/:guid/apps' do |guid|
+    content_type :json
+
+    spaces = @client.spaces_by_organization_guid "af78c950-6a67-4277-aa27-f2a246f46e0e"
+    apps = @client.apps_by_organization_guid "af78c950-6a67-4277-aa27-f2a246f46e0e"
+    apps.to_json
   end
 
   get '/api/apps' do
@@ -109,17 +124,26 @@ module CFoundry::V2
   class Organization < Model
     def to_json(*a)
       hash = {
+          :guid => guid,
           :name => name,
-          :spaces => spaces,
+          :spaces => spaces
       }
 
       hash.to_json
     end
   end
-end
 
-module CFoundry::V2
   class Space < Model
+    def to_json(*a)
+      hash = {
+          :name => name,
+      }
+
+      hash.to_json
+    end
+  end
+
+  class App < Model
     def to_json(*a)
       hash = {
           :name => name,
