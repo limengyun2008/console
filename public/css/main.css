@@ -2,6 +2,15 @@ html {
     font-family: arial, "Time New Roman", sans-serif;
 }
 
+body {
+    background: url(https://d1zkfrljmtbmue.cloudfront.net/images/bg-noise-tile.png) repeat;
+}
+
+.wrp {
+    width: 980px;
+    margin: 0 auto;
+}
+
 .org-container h2{
     line-height: 40px;
     font-size: 30px;

@@ -37,7 +37,7 @@ class Server < Sinatra::Base
   get '/' do
     #puts @client.public_methods
     orgs = @client.organizations_by_user_guid @client.current_user.guid
-    puts @current_user.public_methods
+    puts @client.public_methods
     erb :index, :locals => {:orgs => orgs, :current_user => @current_user}
   end
 
