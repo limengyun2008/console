@@ -1,9 +1,25 @@
-<h1><%= app.name %></h1>
 
+<div class="main" id="app">
+    <div class="container">
+        <div class="container-header">
+            <h2><%= app.name %></h2>
+        </div>
+        
+        <div class="menu">
+            <a class="tab" href="javascript:void(0);">Control</a>
+            <a class="tab" href="javascript:void(0);">Deploy</a>
+            <a class="tab" href="javascript:void(0);">Setting</a>
+        </div>
 
-
-<div>
-  <a href="javascript:void(0);">Control</a>
-  <a href="javascript:void(0);">Deploy</a>
-  <a href="javascript:void(0);">Setting</a>
+        <div class="contents">
+            <div class="tab-content" id="control">
+            </div>
+            
+            <div class="tab-content" id="deploy">
+            </div>
+            
+            <div class="tab-content" id="setting">
+            </div>
+        </div>
+    </div>
 </div>

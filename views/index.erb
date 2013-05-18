@@ -1,40 +1,30 @@
-<h1>Youdao App Engine</h1>
-<div class="nav">
 
-  <a href="/app/create">create app</a>
-  <a href="#">docs</a>
-  <span>welcome, <%= current_user.email %>!</span>
-
-
-</div>
-
-
-
-
-
-
-<% for org in orgs %>
-    <div class="org-container" data-guid="<%= org.guid %>">
-      <h2><%= org.name %></h2>
-      <% for space in org.spaces %>
-      <div class="space-container"  data-guid="<%= space.guid %>">
-        <h3><%= space.name %></h3>
-        <% for app in space.apps %>
+<div class="main" id="index">
+    <% for org in orgs %>
+    <div class="container org-container" data-guid="<%= org.guid %>">
+        <div class="container-header">
+            <h2><%= org.name %></h2>
+        </div>
+        
+        <% for space in org.spaces %>
+        <div class="space-container"  data-guid="<%= space.guid %>">
+            <h3><%= space.name %></h3>
+            <% for app in space.apps %>
             <div class="app-container" data-guid="<%= app.guid %>" >
-              <ul class="clear-fix">
-                <li><a href="/app/<%= app.guid %>"><%= app.name %></a></li>
-                <li><%= app.memory %>MB X <%= app.total_instances %> instances</li>
-                <li><%= app.disk_quota %>MB</li>
-                <li>
-                  <% for route in app.routes %>
-                    <span><a href="http://<%= route.name %>"><%= route.name %></a></span>
-                  <% end %>
-                </li>
-              </ul>
+                <ul class="clear-fix">
+                    <li><a href="/app/<%= app.guid %>"><%= app.name %></a></li>
+                    <li><%= app.memory %>MB X <%= app.total_instances %> instances</li>
+                    <li><%= app.disk_quota %>MB</li>
+                    <li>
+                        <% for route in app.routes %>
+                        <span><a href="http://<%= route.name %>"><%= route.name %></a></span>
+                        <% end %>
+                    </li>
+                </ul>
             </div>
-        <% end %>
-
+            <% end %>
       </div>
       <% end %>
     </div>
-<% end %>
+    <% end %>
+</div>

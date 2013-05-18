@@ -11,7 +11,7 @@ body {
     margin: 0 auto;
 }
 
-.org-container h2{
+.container h2{
     line-height: 40px;
     font-size: 30px;
 }
@@ -28,5 +28,21 @@ body {
 .app-container ul li{
     float: left;
     list-style-type: none;
-    width:200px;
+    width: 200px;
+}
+
+#app .container .menu {
+    float: left;
+    width: 25%;
+}
+
+#app .container .menu  a.tab{
+    display: block;
+    line-height:20px;
+    padding: 10px;
+}
+
+#app .container .contents {
+    float:right;
+    width:75%;
 }

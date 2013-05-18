@@ -8,13 +8,22 @@
     <meta name="viewport" content="width=device-width">
 
     <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href="/css/clear-fix.css">
+    <link rel="stylesheet" href="/css/clear-fix.css">
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 
 <div class="wrp">
-  <%= yield %>
+    <div id="header">
+        <h1>Youdao App Engine</h1>
+        <div class="nav">
+            <a href="/app/create">create app</a>
+            <a href="#">docs</a>
+            <span>welcome, <%= current_user.email %>!</span>
+        </div>
+    </div>
+    
+    <%= yield %>
 </div>
 
 
