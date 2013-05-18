@@ -12,7 +12,6 @@ class Server < Sinatra::Base
   set :root, File.expand_path('../../', __FILE__)
 
   before do
-
     @access_token = request.cookies["access_token"]
     if @access_token
       begin
@@ -26,8 +25,6 @@ class Server < Sinatra::Base
     else
       login = false
     end
-
-
 
     if !login && request.path_info != '/login'
       redirect to('/login?redirect=true')
