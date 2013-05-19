@@ -35,11 +35,16 @@ class Server < Sinatra::Base
     #puts @client.public_methods
     orgs = @client.organizations_by_user_guid @client.current_user.guid
     puts @client.public_methods
-    erb :index, :locals => {:orgs => orgs, :current_user => @current_user}
+
+    erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
+      erb :index, :locals => {:orgs => orgs}
+    end
+
+
   end
 
   get '/login' do
-    erb :login
+    erb :login, :layout => :base
   end
 
   post '/login' do
@@ -60,7 +65,10 @@ class Server < Sinatra::Base
   end
 
   get '/app/create' do
-    erb :create_app
+    erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
+      erb :create_app
+    end
+
   end
 
   post '/app/create' do
@@ -84,7 +92,10 @@ class Server < Sinatra::Base
 
   get '/app/:guid' do |guid|
     app = @client.app guid
-    erb :app , :locals => {:app => app}
+    erb :app , :locals => {:app => app, :current_user => @current_user}
+    erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
+      erb :app , :locals => {:app => app}
+    end
   end
 
   get '/api/orgs' do

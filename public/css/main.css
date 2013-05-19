@@ -1,9 +1,11 @@
 html {
-    font-family: arial, "Time New Roman", sans-serif;
+    font-family: "Khmer UI","Microsoft YaHei", sans-serif;
 }
 
 body {
-    background: url(https://d1zkfrljmtbmue.cloudfront.net/images/bg-noise-tile.png) repeat;
+    /* background: url(https://d1zkfrljmtbmue.cloudfront.net/images/bg-noise-tile.png) repeat; */
+    background-color: #00639c;
+    color: #fff;
 }
 
 .wrp {
@@ -11,9 +13,137 @@ body {
     margin: 0 auto;
 }
 
-.container h2{
-    line-height: 40px;
+a {
+    color: #41e141;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #2fa700;
+}
+
+.header {
+    margin: 40px 0;
+    line-height: 32px;
+}
+
+.header h1{
     font-size: 30px;
+    font-weight: normal;
+    width: 300px;
+    float: left;
+}
+
+.header h1 a{
+    color: #ffffff;
+}
+
+.header h1 a:hover{
+    color: #41abe1;
+}
+
+.header .nav {
+    float: right;
+}
+
+.footer {
+    background: #111;
+    color: #666;
+    line-height: 50px;
+    margin-top: 50px;
+}
+
+.centered {
+    text-align: center;
+    display: block;
+}
+
+input {
+    border: 2px #00639c solid;
+    width: 100%;
+    padding: 0 0 0 10px;
+    background-color: #fff;
+    outline: 0;
+    margin-right: 32px;
+    min-height: 32px;
+    position: relative;
+}
+
+input:focus {
+    border-color: #2fa700 ;
+}
+
+button, .button {
+    font-family: 'Segoe UI', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 9pt;
+    min-width: 90px;
+    min-height: 32px;
+    line-height: 32px;
+    height: 32px;
+    background-color: #ccc;
+    border: 1px transparent solid;
+    color: #ffffff;
+    margin-right: 10px;
+    /*margin-bottom: 10px;*/
+    border-raduis: 0;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    position: relative;
+}
+button:active, .button:active {
+    top: 2px;
+}
+
+button.green, .button.green {
+    background: #2fa700 ;
+}
+button.green:hover, .button.green:hover {
+    background-color: #237c00;
+    color: #fff;
+}
+
+/* ===login page start=== */
+#login-page h1 {
+    font-weight: normal;
+    font-size: 50px;
+    line-height: 130%;
+    text-rendering: optimizeLegibility;
+    text-align: center;
+    margin: 40px 0 20px 0;
+}
+
+#login-page .intro{
+    font-weight: 300;
+    font-size: 20px;
+    color: #aaa;
+    text-align: center;
+    margin: -10px 0 50px 0;
+}
+
+#login-page form{
+    width: 420px;
+    margin: 0 auto 50px;
+}
+
+
+#login-page form label{
+    display: block;
+    text-align: left;
+}
+
+#login-page form button{
+    margin-top: 30px;
+}
+/* ===login page end=== */
+
+.main h2{
+    line-height: 40px;
+    font-size: 23px;
+    color: #41abe1;
+    font-weight: normal;
 }
 
 .space-container {
@@ -31,18 +161,17 @@ body {
     width: 200px;
 }
 
-#app .container .menu {
+#app-page .container .menu {
     float: left;
     width: 25%;
 }
 
-#app .container .menu  a.tab{
+#app-page .container .menu  a.tab{
     display: block;
-    line-height:20px;
-    padding: 10px;
+    margin: 10px 0;
 }
 
-#app .container .contents {
+#app-page .container .contents {
     float:right;
     width:75%;
 }

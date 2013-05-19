@@ -1,10 +1,16 @@
-<form action="/login" method="post">
-  <label for="username">username</label><input type="text" name="username" id="username" />
+<div class="main" id="login-page">
 
 
-  <label for="password">password</label><input type="password" name="password" id="password"/>
+    <h1>Youdao App Engine</h1>
+    <p class="intro">Designed based on cloudfoundry, for all language and all framework.</p>
 
+    <form action="/login" method="post" class="centered">
+      <label for="username">username</label>
+      <input type="text" name="username" id="username" placeholder="Ldap 账号"/>
 
-  <button type="submit">submit</button>
-</form>
+      <label for="password">password</label>
+      <input type="password" name="password" id="password"  placeholder="Ldap 密码"/>
 
+      <button class="green" type="submit">登陆</button>
+    </form>
+</div>
