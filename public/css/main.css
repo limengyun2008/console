@@ -3,9 +3,12 @@ html {
 }
 
 body {
-    /* background: url(https://d1zkfrljmtbmue.cloudfront.net/images/bg-noise-tile.png) repeat; */
-    background-color: #00639c;
-    color: #fff;
+    /*
+        background: url(https://d1zkfrljmtbmue.cloudfront.net/images/bg-noise-tile.png) repeat;
+         color: #333;*/
+
+        background-color: #00639c;
+        color: #fff;
 }
 
 .wrp {
@@ -138,6 +141,32 @@ button.green:hover, .button.green:hover {
     margin-top: 30px;
 }
 /* ===login page end=== */
+
+/* ===create-app page start=== */
+
+/* ===create-app page end=== */
+
+.type-item {
+
+    display: inline-block;
+    float: left;
+    width: 300px;
+    height: 80px;
+    background: #2fa700 ;
+
+}
+
+.type-item .type-name {
+    display: block;
+    margin: 10px 50px;
+    font-size: 20px;
+}
+
+.type-item .type-desc {
+    display: block;
+    font-size: 12px;
+    margin: 10px 50px;
+}
 
 .main h2{
     line-height: 40px;

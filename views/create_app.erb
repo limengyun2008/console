@@ -1,14 +1,24 @@
 
-<div class="main" id="index">
+<div class="main" id="create-app-page">
+    <div class="type-selector">
+        <h2>Step 1: Choose Your Application Type</h2>
+        <div class="type-item">
+            <span class="type-name">Java Web</span>
+            <span class="type-desc">标准java war包程序</span>
+        </div>
+    </div>
+
     <form method="post" action="/app/create">
-        <h2>Step 1: Choose an application </h2>
+
+
+
         <input type="radio" name="buildpack" value="java">java <br/>
         <input type="radio" name="buildpack" value="python">python <br/>
         <input type="radio" name="buildpack" value="php">php <br/>
 
 
 
-        <h2>Step 2: Enter your app name </h2>
+        <h2>Step 2: Enter Your Application Name </h2>
         <input type="text" name="name" />
 
 
