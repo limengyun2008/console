@@ -114,7 +114,7 @@ button.big, .button.big {
     min-width: 120px;
     min-height: 48px;
     line-height: 48px;
-    font-size: 22px;
+    font-size: 16px;
     padding: 0 10px;
 }
 
@@ -151,6 +151,73 @@ button.red:hover, .button.red:hover {
     background-color: #a90000;
     color: #fff;
 }
+
+
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    margin: 0 0 20px;
+}
+table thead tr th,
+table thead tr td {
+    display: table-cell;
+    vertical-align: bottom;
+    padding-bottom: 5px;
+    padding-top: 10px;
+    padding-left: 5px;
+    border-bottom: 1px #ddd solid;
+    border-right: 1px #ddd solid;
+    border-left: 1px transparent solid;
+    border-top: 1px transparent solid;
+
+    font-weight: 400;
+    font-size: 11pt;
+    letter-spacing: 0.01em;
+    line-height: 14pt;
+    color: rgba(0, 0, 0, 0.6);
+    text-align: left;
+}
+table thead tr th.right,
+table thead tr td.right {
+    text-align: right;
+    padding-right: 10px;
+}
+table thead tr th.last,
+table thead tr td.last {
+    border-right: 1px transparent solid;
+}
+table thead tr th:last-child,
+table thead tr td:last-child {
+    border-right: 1px transparent solid;
+}
+table tbody tr {
+    border: 1px #fff solid;
+}
+table tbody tr td {
+    font-family: 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 11pt;
+    letter-spacing: 0.02em;
+    line-height: 20px;
+    padding: 3px 10px;
+    border-right: 1px #ddd solid;
+    border-bottom: 1px #ddd solid;
+    box-sizing: border-box;
+}
+table tbody tr td.right {
+    text-align: right;
+}
+table tbody tr td.center {
+    text-align: center;
+}
+table tbody tr td.last {
+    border-right: 1px transparent solid;
+}
+table tbody tr td:last-child {
+    border-right: 1px transparent solid;
+}
+
 
 
 /* ===login page start=== */
@@ -343,5 +410,9 @@ button.red:hover, .button.red:hover {
     line-height: 48px;
     font-weight: bold;
     font-size: 18px;
+}
+
+#app-page #deploy .edit:hover {
+    background-color: #237c00 ;
 }
 /* ===app page end=== */
