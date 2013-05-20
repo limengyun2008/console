@@ -48,5 +48,18 @@
     $("#create-app-page form").on("submit",function(e) {
         $("#app-buildpack").val( $("div.type-item.selected").data("buildpack"));
     });
+
+    $("#app-page .menu-item").on("click",function(e) {
+        //console.log($(this).siblings());
+        //alert("1");
+        $(this).siblings().removeClass("selected");
+        $(this).addClass("selected");
+
+        var active = $(this).data("tab");
+        $("#app-page .contents div.tab-content").removeClass("active");
+        $("#" + active).addClass("active");
+    });
+
+
 })(jQuery);
 

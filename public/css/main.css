@@ -22,12 +22,19 @@ input, label, select, option, textarea, button, fieldset, legend {
 }
 
 a {
-    color: #41e141;
+    color: #2fa700;
     text-decoration: none;
 }
 
 a:hover {
-    color: #2fa700;
+    color: #237c00;
+}
+
+hr {
+    margin: 21px 0;
+    border: 0;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #ffffff;
 }
 
 .header {
@@ -68,7 +75,7 @@ a:hover {
 
 input {
     border: 2px #ccc solid;
-    width: 100%;
+    display: inline-block;
     padding: 0 0 0 10px;
     background-color: #fff;
     outline: 0;
@@ -84,8 +91,9 @@ input:focus {
 button, .button {
 
     font-weight: 400;
-    font-size: 9pt;
-    min-width: 90px;
+    font-size: 14px;
+    padding: 0 10px;
+    min-width: 80px;
     min-height: 32px;
     line-height: 32px;
     height: 32px;
@@ -101,6 +109,27 @@ button, .button {
     cursor: pointer;
     position: relative;
 }
+
+button.big, .button.big {
+    min-width: 120px;
+    min-height: 48px;
+    line-height: 48px;
+    font-size: 22px;
+    padding: 0 10px;
+}
+
+button:hover, .button:hover {
+    background-color: #999;
+}
+
+button.disable, .button.disable {
+    cursor: not-allowed;
+}
+
+button.disable:active, .button.disable:active {
+    top: 0;
+}
+
 button:active, .button:active {
     top: 2px;
 }
@@ -108,10 +137,21 @@ button:active, .button:active {
 button.green, .button.green {
     background: #2fa700 ;
 }
+
 button.green:hover, .button.green:hover {
     background-color: #237c00;
     color: #fff;
 }
+
+button.red, .button.red {
+    background: #d10000;
+}
+
+button.red:hover, .button.red:hover {
+    background-color: #a90000;
+    color: #fff;
+}
+
 
 /* ===login page start=== */
 #login-page h1 {
@@ -136,6 +176,9 @@ button.green:hover, .button.green:hover {
     margin: 0 auto 50px;
 }
 
+#login-page form input{
+    width: 100%;
+}
 
 #login-page form label{
     display: block;
@@ -207,7 +250,14 @@ button.green:hover, .button.green:hover {
 
 .main h2{
     line-height: 40px;
-    font-size: 23px;
+    font-size: 24px;
+    color: #41abe1;
+    font-weight: normal;
+}
+
+.main h3{
+    line-height: 40px;
+    font-size: 20px;
     color: #41abe1;
     font-weight: normal;
 }
@@ -227,6 +277,7 @@ button.green:hover, .button.green:hover {
     width: 200px;
 }
 
+/* ===app page start=== */
 #app-page .container .menu {
     float: left;
     width: 25%;
@@ -240,4 +291,57 @@ button.green:hover, .button.green:hover {
 #app-page .container .contents {
     float:right;
     width:75%;
+
 }
+
+#app-page .container .contents .tab-content {
+    display: none;padding-top: 10px;
+    padding-left: 20px;
+}
+
+#app-page .container .contents .tab-content.active {
+    display: block;
+}
+
+.menu-item {
+    padding: 10px 10px 10px 50px;
+    border: solid 3px transparent;
+    color: #2fa700;
+    line-height: 32px;
+}
+
+.menu-item:hover {
+    border: solid 3px #cccccc;
+    color: #237c00;
+}
+
+.menu-item.selected{
+    border: solid 3px #41abe1;
+}
+.menu-item.settings {
+    background: url("../image/icon-settings.png") 10px center no-repeat;
+}
+.menu-item.control {
+    background: url("../image/icon-control.png") 10px center no-repeat;
+}
+.menu-item.deploy {
+    background: url("../image/icon-deploy.png") 10px center no-repeat;
+}
+
+#app-page #control button {
+    margin-left: 50px;
+}
+
+#app-page #deploy input {
+    width: 300px;
+}
+
+#app-page #deploy .edit {
+    background: #2fa700 url("../image/icon-edit.png") 10px center no-repeat;
+    padding: 10px 20px 10px 65px;
+    min-height: 48px;
+    line-height: 48px;
+    font-weight: bold;
+    font-size: 18px;
+}
+/* ===app page end=== */

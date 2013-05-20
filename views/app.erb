@@ -6,19 +6,34 @@
         </div>
         
         <div class="menu">
-            <a class="tab button green" href="javascript:void(0);">Control</a>
-            <a class="tab button green" href="javascript:void(0);">Deploy</a>
-            <a class="tab button green" href="javascript:void(0);">Setting</a>
+            <a class="tab menu-item control selected" data-tab="control" href="javascript:void(0);">Control</a>
+            <a class="tab menu-item deploy" data-tab="deploy" href="javascript:void(0);">Deploy</a>
+            <a class="tab menu-item settings" data-tab="settings" href="javascript:void(0);">
+               Settings
+            </a>
         </div>
 
         <div class="contents">
-            <div class="tab-content" id="control">
+            <div class="tab-content active" id="control">
+                <button class="big green">Start</button>
+                <button class="big red disable">Stop</button>
+                <button class="disable">Stop</button>
             </div>
             
             <div class="tab-content" id="deploy">
+                <h3>Update the version</h3>
+                <div class="update-version">
+                    <input type="text" placeholder="输入代码库的版本号"  name="version"  />
+                    <a class="button green"
+                       href="javascript:void(0);">deploy</a>
+                </div>
+              <hr/>
+              <a class="button big green edit"
+                 href="javascript:void(0);">Modify the code via web IDE</a>
+
             </div>
             
-            <div class="tab-content" id="setting">
+            <div class="tab-content" id="settings">settings
             </div>
         </div>
     </div>
