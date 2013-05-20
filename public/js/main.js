@@ -39,7 +39,8 @@
 
 
     $("#create-app-page div.type-item").on("click",function(e) {
-        console.log($(this).siblings());
+        //console.log($(this).siblings());
+        //alert("1");
         $(this).siblings().removeClass("selected");
         $(this).addClass("selected");
     });

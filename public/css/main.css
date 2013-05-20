@@ -1,15 +1,19 @@
 html {
-    font-family: "Khmer UI","Microsoft YaHei", sans-serif;
+
 }
 
 body {
-
-        background: url(https://d1zkfrljmtbmue.cloudfront.net/images/bg-noise-tile.png) repeat;
-         color: #333;
+    font-family: "Khmer UI", "Microsoft YaHei", sans-serif;
+    background: url(../image/bg.png) repeat;
+    color: #333;
 /*
         background-color: #00639c;
         color: #fff;
         */
+}
+
+input, label, select, option, textarea, button, fieldset, legend {
+    font-family: "Khmer UI", "Microsoft YaHei", sans-serif;
 }
 
 .wrp {
@@ -63,7 +67,7 @@ a:hover {
 }
 
 input {
-    border: 2px #00639c solid;
+    border: 2px #ccc solid;
     width: 100%;
     padding: 0 0 0 10px;
     background-color: #fff;
@@ -78,7 +82,7 @@ input:focus {
 }
 
 button, .button {
-    font-family: 'Segoe UI', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+
     font-weight: 400;
     font-size: 9pt;
     min-width: 90px;
@@ -144,6 +148,10 @@ button.green:hover, .button.green:hover {
 /* ===login page end=== */
 
 /* ===create-app page start=== */
+#create-app-page #app-name {
+    width: 610px;
+}
+
 #create-app-page .create-button {
     margin-top: 50px;
 }
@@ -177,7 +185,10 @@ button.green:hover, .button.green:hover {
 
 .type-item.selected {
     border: solid 3px #41abe1;
+}
 
+.type-item.selected .type-name{
+    background: url(../image/selected-bg.png) right top no-repeat;
 }
 
 .type-item .type-name {
