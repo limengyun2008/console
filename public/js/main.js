@@ -3,7 +3,7 @@
 
     var auth_header = $.cookie("access_token");
     console.log(auth_header,location.pathname);
-    if(location.pathname != "/") return;
+
     /*
     $.ajax({
         url: "/api/orgs",
@@ -36,5 +36,16 @@
     });
     */
 
+
+
+    $("#create-app-page div.type-item").on("click",function(e) {
+        console.log($(this).siblings());
+        $(this).siblings().removeClass("selected");
+        $(this).addClass("selected");
+    });
+
+    $("#create-app-page form").on("submit",function(e) {
+        $("#app-buildpack").val( $("div.type-item.selected").data("buildpack"));
+    });
 })(jQuery);
 

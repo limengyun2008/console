@@ -3,12 +3,13 @@ html {
 }
 
 body {
-    /*
-        background: url(https://d1zkfrljmtbmue.cloudfront.net/images/bg-noise-tile.png) repeat;
-         color: #333;*/
 
+        background: url(https://d1zkfrljmtbmue.cloudfront.net/images/bg-noise-tile.png) repeat;
+         color: #333;
+/*
         background-color: #00639c;
         color: #fff;
+        */
 }
 
 .wrp {
@@ -38,11 +39,11 @@ a:hover {
 }
 
 .header h1 a{
-    color: #ffffff;
+    color: #41abe1;
 }
 
 .header h1 a:hover{
-    color: #41abe1;
+    color: #00639c;
 }
 
 .header .nav {
@@ -143,29 +144,54 @@ button.green:hover, .button.green:hover {
 /* ===login page end=== */
 
 /* ===create-app page start=== */
-
+#create-app-page .create-button {
+    margin-top: 50px;
+}
 /* ===create-app page end=== */
 
 .type-item {
-
+    margin: 0 10px 10px 0;
     display: inline-block;
     float: left;
     width: 300px;
     height: 80px;
-    background: #2fa700 ;
+    border: solid 3px #cccccc;
+}
+
+.type-item.java {
+    background: url(../image/icon-java.png) left center no-repeat;
+}
+
+.type-item.php {
+    background: url(../image/icon-php.png) left center no-repeat;
+}
+
+.type-item.python-wsgi {
+    background: url(../image/icon-python-wsgi.png) left center no-repeat;
+}
+
+.type-item:hover {
+    border: solid 3px #41abe1;
+
+}
+
+.type-item.selected {
+    border: solid 3px #41abe1;
 
 }
 
 .type-item .type-name {
     display: block;
-    margin: 10px 50px;
+    margin-left: 80px;
+    padding-top: 10px;
     font-size: 20px;
+    line-height: 40px;
 }
 
 .type-item .type-desc {
     display: block;
     font-size: 12px;
-    margin: 10px 50px;
+    margin-left: 80px;
 }
 
 .main h2{
