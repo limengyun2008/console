@@ -15,8 +15,8 @@ module Console
 		class << self
 			def pushNewApp(client, domain)
 				app = client.app
-				initAppDirAndGitUrl(app.username, app.name)
-				puts "Init Git directory for " + app.username + " app name: " + app.name
+				initAppDirAndGitUrl(client.current_user.email, app.name)
+				puts "Init Git directory for " + client.current_user.email + " app name: " + app.name
 				if appAvailable?
 					puts "Create app dir for app " + app.name
 				else
@@ -63,8 +63,8 @@ module Console
 
 
 			def updateCode(app, commit)
-				initAppDirAndGitUrl(app.username, app.name)
-				puts "Update code for " + app.username + " app name : " + app.name
+				initAppDirAndGitUrl(client.current_user.email, app.name)
+				puts "Update code for " + client.current_user.email + " app name : " + app.name
 				#TODO
 			end
 
