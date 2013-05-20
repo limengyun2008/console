@@ -72,7 +72,7 @@ class Server < Sinatra::Base
     app.buildpack = buildpack # <- set the buildpack
     app.create!
 
-    # zhaodch need to code here....
+		Utils.pushNewApp(@client, domain)
 
     guid = app.guid
     redirect to("/app/#{guid}")
