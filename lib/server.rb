@@ -1,6 +1,7 @@
 require 'sinatra/base'
 require 'console'
 require 'json'
+require 'utils'
 #require 'grit'
 
 
@@ -64,18 +65,31 @@ class Server < Sinatra::Base
     name = params["name"]
     domain = params["domain"]
 
-    app = @client.app
-    app.name = name
-    app.total_instances = 1 # <- set the number of instances you want
-    app.memory = 512 # <- set the allocated amount of memory
-    app.production = false # <- should the application run in production mode
-    app.buildpack = buildpack # <- set the buildpack
-    app.create!
+		app = @client.app
+		app.name = name
+		puts app.name
+		app.total_instances = 1 # <- set the number of instances you want
+		app.memory = 256 # <- set the allocated amount of memory
+		#app.production = false # <- should the application run in production mode
+		#app.buildpack = buildpack # <- set the buildpack
+		#app.space = @client.space_by_organization_guid @client.current_organization.guid
+		#@client.space_by_organization_guid @client.current_organization.guid do |space|
+		#  if (space == nil)
+		#    puts "Nil space"
+		#  else
+		#    app.space = space
+		#    puts space.guid
+		#  end
+		#end
+		#TODO: Move hard code here
+		app.space = @client.space_by_name "zhaodc-space"
+		app.create!
 
-		Utils.pushNewApp(@client, domain)
-
-    guid = app.guid
-    redirect to("/app/#{guid}")
+		domain = @client.domain_by_name "cf2.youdao.com"
+		Utils::pushNewApp(@client, app, domain, buildpack)
+		guid = app.guid
+		redirect to("/apps")
+    #redirect to("/app/#{guid}")
   end
 
   get '/app/:guid' do |guid|

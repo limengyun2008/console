@@ -13,31 +13,46 @@ module Console
 		RubyProjectGitUrl = "https://github.com/appfog/af-php-base.git"
 
 		class << self
-			def pushNewApp(client, domain)
-				app = client.app
+			def pushNewApp(client, app, domain, buildpack)
+
+				puts client.current_user.email
+				puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+				puts client.current_user.methods
+				puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+				puts app.name
+
 				initAppDirAndGitUrl(client.current_user.email, app.name)
+
+				puts @@currentAppDir
+				puts @@currentGitUrl
+
 				puts "Init Git directory for " + client.current_user.email + " app name: " + app.name
 				if appAvailable?
 					puts "Create app dir for app " + app.name
 				else
 					raise NameError, "Cannot create app dir for " + app.name + ", please check whether it has been used"
 				end
+
 				createAppDir
-				cloneBaseCode(app.buildpack)
-				if app.buildpack == "java"
+
+				cloneBaseCode(buildpack)
+
+				if buildpack == "java"
 					buildApp
 				end
-				doPushApp(client, domain)
+				doPushApp(client, app, domain)
+
+				cleanCodeDir
 
 			end
 
 			def appAvailable?
-				Dir.exist?(@@currentAppDir) && Dir[@@currentAppDir + '/*'].empty?
+				!Dir.exist?(@@currentAppDir) || Dir[@@currentAppDir + '/*'].empty?
 			end
 
 			def createAppDir
 				begin
-					FileUtils.mkdir(@@currentAppDir, {:noop => true, :verbose => true})
+					FileUtils.mkdir_p @@currentAppDir
 				rescue IOError
 					puts "Cannot create app dir for IOERROR"
 				end
@@ -56,8 +71,13 @@ module Console
 					raise ArgumentError, "No match buildpack for input "+ buildpack
 				end
 
-				repo = Grit::Repo.new(@@currentAppDir, {})
-				repo.fork_bare_from(giturl, {:quiet => true})
+				puts giturl
+
+				gritty = Grit::Git.new(@@currentAppDir)
+				gritty.clone({:quiet => false, :progress => true}, giturl, @@currentAppDir)
+
+				#repo = Grit::Repo.new(@@currentAppDir, {})
+				#repo.fork_bare_from(giturl, {:quiet => false})
 
 			end
 
@@ -69,7 +89,7 @@ module Console
 			end
 
 			def initAppDirAndGitUrl(username, appname)
-				@@currentAppDir = @@baseAppGitDir + username + "/" + appname
+				@@currentAppDir = @@baseAppGitDir + username + "/" + appname + ".git"
 				@@currentGitUrl = @@baseAppGitUrl + username + "/" + appname
 			end
 
@@ -77,12 +97,11 @@ module Console
 				#TODO
 			end
 
-			def doPushApp(client, domain)
-				app = client.app
+			def doPushApp(client, app, domain)
 
 				route = create_route(client.route, domain, app.name, app.space)
 
-				bind_route(route, app) if app
+				bind_route(route, app)
 
 				path = @@currentAppDir
 
@@ -101,6 +120,14 @@ module Console
 
 			def bind_route(route, app)
 				app.add_route(route)
+			end
+
+			def cleanCodeDir
+				begin
+					FileUtils.rmdir @@currentAppDir
+				rescue IOError
+					puts "Cannot remove app dir for IOERROR"
+				end
 			end
 
 		end
