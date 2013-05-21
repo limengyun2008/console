@@ -15,8 +15,16 @@
 
         <div class="contents">
             <div class="tab-content active" id="control">
+              <h3>App is <%=app.state %></h3>
+              <form action="/app/<%=app.guid %>" method="post">
                 <button class="big green">Start</button>
+                <input type="hidden" name="action" value="start" />
+                </form>
+              <form action="/app/<%=app.guid %>" method="post">
+                <input type="hidden" name="action" value="stop" />
                 <button class="big red disable">Stop</button>
+              </form>
+
                 <button class="big blue">Restart</button>
                 <hr/>
               <h3>App Resources</h3>
@@ -24,6 +32,8 @@
 
               <hr/>
               <h3>Instances</h3>
+
+             <%if app.running? %>
               <table>
                 <thead>
                 <tr>
@@ -35,15 +45,20 @@
                 </tr>
                 </thead>
                 <tbody>
+                    <%for key,value in app.stats %>
                     <tr>
-                      <td>aaa</td>
-                      <td class="right">bbb</td>
-                      <td class="right">xxx</td>
-                      <td class="right">ddd</td>
-                      <td class="right">ddd</td>
+                      <td><%= key %></td>
+                      <td class="right"><%= value[:state] %></td>
+                      <td class="right"><%= value[:stats][:usage][:cpu] %></td>
+                      <td class="right"><%= value[:stats][:usage][:mem]/(1024*1024) %> MB</td>
+                      <td class="right"><%= value[:stats][:usage][:disk]/(1024*1024) %> MB</td>
                     </tr>
+                    <% end %>
                 </tbody>
               </table>
+            <% else %>
+              no running instances
+            <% end %>
             </div>
             
             <div class="tab-content" id="deploy">
@@ -60,7 +75,7 @@
             </div>
             
             <div class="tab-content" id="settings">
-              <button class="big red">Delete This App</button>
+              <button class="big red" id="delete-app">Delete This App</button>
             </div>
         </div>
     </div>

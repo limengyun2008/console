@@ -34,7 +34,7 @@ class Server < Sinatra::Base
   get '/' do
     #puts @client.public_methods
     orgs = @client.organizations_by_user_guid @client.current_user.guid
-    puts @client.public_methods
+    #puts @client.public_methods
 
     erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
       erb :index, :locals => {:orgs => orgs}
@@ -92,11 +92,31 @@ class Server < Sinatra::Base
 
   get '/app/:guid' do |guid|
     app = @client.app guid
+    puts app.public_methods
     erb :app , :locals => {:app => app, :current_user => @current_user}
     erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
       erb :app , :locals => {:app => app}
     end
   end
+
+  post '/app/:guid' do |guid|
+    app = @client.app guid
+
+    action = params["action"]
+
+    case action
+      when "start"
+        app.start!
+      when "stop"
+        app.stop!
+      when "restart"
+        app.restart!
+    end
+
+    redirect to("/app/#{guid}")
+  end
+
+
 
   get '/api/orgs' do
     content_type :json

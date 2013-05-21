@@ -60,6 +60,13 @@
         $("#" + active).addClass("active");
     });
 
+    $("#delete-app").on("click", function(e) {
+        $("#model, #model-mask").show();
+    });
+
+    $("#model .cancel").on("click", function(e) {
+        $("#model, #model-mask").hide();
+    });
 
 })(jQuery);
 
