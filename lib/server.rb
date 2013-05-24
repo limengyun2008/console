@@ -1,8 +1,8 @@
 require 'sinatra/base'
 require 'console'
 require 'json'
-#require 'grit'
-
+require 'console/svn'
+require 'fileutils'
 
 
 class Server < Sinatra::Base
@@ -74,25 +74,41 @@ class Server < Sinatra::Base
   post '/app/create' do
     buildpack = params["buildpack"]
     name = params["name"]
-    domain = params["domain"]
+    space = params["space"]
+
+    space = @client.space "e7a976f3-5cf4-43bd-b2d2-df092467ab91"
 
     app = @client.app
     app.name = name
     app.total_instances = 1 # <- set the number of instances you want
-    app.memory = 512 # <- set the allocated amount of memory
-    app.production = false # <- should the application run in production mode
-    app.buildpack = buildpack # <- set the buildpack
+    app.memory = 128 # <- set the allocated amount of memory
+    #app.buildpack = buildpack
+    app.space = space
     app.create!
 
-    # zhaodch need to code here....
+    domain = @client.domain_by_name "limy.cf2.youdao.com"
+    route = @client.route
+    route.host = name
+    route.domain = domain
+    route.space = space
+    route.create!
 
-    guid = app.guid
-    redirect to("/app/#{guid}")
+    app.add_route(route)
+
+    svn = Svn.new(app.guid, buildpack)
+    svn.mkdir_on_remote_svn_server
+    svn.mkdir_on_local
+    app.upload svn.local_app_dir
+
+    app.start!(true)
+
+    redirect to("/app/#{app.guid}")
   end
+
 
   get '/app/:guid' do |guid|
     app = @client.app guid
-    puts app.public_methods
+   # puts app.public_methods
     erb :app , :locals => {:app => app, :current_user => @current_user}
     erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
       erb :app , :locals => {:app => app}
@@ -111,6 +127,23 @@ class Server < Sinatra::Base
         app.stop!
       when "restart"
         app.restart!
+      when "update"
+        revision = params["revision"]
+
+        tmpdir =  "#{Dir.tmpdir}/.apps"
+        FileUtils.mkdir_p tmpdir
+        FileUtils.rm_rf "#{tmpdir}/#{guid}"
+        Dir.chdir tmpdir do |dir|
+          svn = Svn.new(app.guid)
+          result = `svn co #{svn.svn_app_dir}  -r #{revision}  --username limy --password LMYlmy111`
+          raise SvnException, result unless $?.to_i == 0
+          app.upload "#{dir}/#{guid}"
+          logger.info "uploading #{dir}/#{guid}"
+          app.restart!(true)
+        end
+
+      else
+        logger.error 'wrong action!'
     end
 
     redirect to("/app/#{guid}")

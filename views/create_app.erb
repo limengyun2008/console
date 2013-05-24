@@ -1,12 +1,12 @@
 
 <div class="main" id="create-app-page">
-    <div class="type-selector">
+    <div class="type-selector clear-fix">
         <h2>Step 1: Choose Your Application Type</h2>
         <div class="type-item java" data-buildpack="java-web">
             <span class="type-name">Java Web</span>
             <span class="type-desc">标准java war包程序</span>
         </div>
-        <div class="type-item python-wsgi selected" data-buildpack="python-wsgi">
+        <div class="type-item python-wsgi selected" data-buildpack="python">
             <span class="type-name">Python</span>
             <span class="type-desc">Python WSGI</span>
         </div>
@@ -14,22 +14,20 @@
           <span class="type-name">PHP</span>
           <span class="type-desc">PHP info</span>
         </div>
+
     </div>
 
     <form method="post" action="/app/create">
-
-
-
         <input type="hidden" name="buildpack" value="" id="app-buildpack" />
 
         <h2>Step 2: Enter Your Application Name </h2>
         <input type="text" name="name" placeholder="应用名称，有可能被别人占用"  id="app-name"/>
 
 
-    <!--
-        <h2>Step 3: Enter your domain </h2>
-        <input type="text" name="domain" />
-    -->
+
+        <!--<h2>Step 3: Select App Space </h2>-->
+        <!--<input type="text" name="space" placeholder="选择应用所在的space"/>-->
+
         <br />
         <button type="submit" class="create-button green">创建应用</button>
 

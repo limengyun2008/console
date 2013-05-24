@@ -60,13 +60,21 @@
               no running instances
             <% end %>
             </div>
-            
+
             <div class="tab-content" id="deploy">
+              <h3>代码库地址</h3>
+              <a href="https://dev.corp.youdao.com/svn/outfox/incubator/yaeapps/<%= app.guid %>">
+                https://dev.corp.youdao.com/svn/outfox/incubator/yaeapps/<%= app.guid %>
+              </a>
+              <hr/>
                 <h3>Update the version</h3>
                 <div class="update-version">
-                    <input type="text" placeholder="输入代码库的版本号"  name="version"  />
-                    <a class="button green"
-                       href="javascript:void(0);">deploy</a>
+                    <form action="/app/<%= app.guid %>" method="post">
+                    <input type="hidden" name="action"  value="update" />
+                    <input type="text" placeholder="输入代码库的版本号"  name="revision"  />
+                    <button type="submit" class="button green"
+                       href="javascript:void(0);">deploy</button>
+                    </form>
                 </div>
               <hr/>
               <a class="button big green edit"

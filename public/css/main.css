@@ -82,6 +82,7 @@ input {
     margin-right: 32px;
     min-height: 32px;
     position: relative;
+    width: 300px;
 }
 
 input:focus {
@@ -258,7 +259,7 @@ table tbody tr td:last-child {
 /* ===login page end=== */
 
 /* ===create-app page start=== */
-#create-app-page #app-name {
+#create-app-page input {
     width: 610px;
 }
 
@@ -286,6 +287,10 @@ table tbody tr td:last-child {
 
 .type-item.python-wsgi {
     background: url(../image/icon-python-wsgi.png) left center no-repeat;
+}
+
+.type-item.iyoudao {
+    background: url(../image/icon-iyoudao.png) 8px center no-repeat;
 }
 
 .type-item:hover {
@@ -320,6 +325,11 @@ table tbody tr td:last-child {
     font-size: 24px;
     color: #41abe1;
     font-weight: normal;
+}
+
+.main h2 span{
+    float: right;
+    font-size: 18px;
 }
 
 .main h3{
