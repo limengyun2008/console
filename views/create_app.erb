@@ -25,8 +25,12 @@
 
 
 
-        <!--<h2>Step 3: Select App Space </h2>-->
-        <!--<input type="text" name="space" placeholder="选择应用所在的space"/>-->
+        <h2>Step 3: Select Organization </h2>
+        <select name="org">
+          <% for org in orgs %>
+            <option value="<%= org.guid %>"><%= org.name %></option>
+          <% end %>
+        </select>
 
         <br />
         <button type="submit" class="create-button green">创建应用</button>

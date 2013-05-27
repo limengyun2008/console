@@ -65,8 +65,9 @@ class Server < Sinatra::Base
   end
 
   get '/app/create' do
+    orgs = @client.organizations_by_user_guid @client.current_user.guid
     erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
-      erb :create_app
+      erb :create_app , :locals => {:orgs => orgs}
     end
 
   end
@@ -74,9 +75,18 @@ class Server < Sinatra::Base
   post '/app/create' do
     buildpack = params["buildpack"]
     name = params["name"]
-    space = params["space"]
+    org = params["org"]
 
-    space = @client.space "e7a976f3-5cf4-43bd-b2d2-df092467ab91"
+    org = @client.organization org
+    space = nil
+    for s in org.spaces
+      if s.name == 'default'
+        space = s
+        break
+      end
+    end
+
+    raise Exception, "error: this org has no default space." if space == nil
 
     app = @client.app
     app.name = name
