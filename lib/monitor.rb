@@ -1,6 +1,4 @@
-require 'rubygems'
 require 'nats/client'
-require 'json'
 
 module Console
 	class Monitor

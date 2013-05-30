@@ -12,3 +12,4 @@ gem 'cfoundry', '=1.0.0' #Cloud Foundry REST API gem
 gem 'grit' #ruby library for git
 gem 'cf-uaa-lib' #ruby library for interact with uaa's token
 gem 'json', '~> 1.7.7'
+gem 'nats'
