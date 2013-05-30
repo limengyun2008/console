@@ -30,7 +30,7 @@ class Server < Sinatra::Base
       redirect to('/login?redirect=true')
 		end
 
-		@monitor = Console::Monitor.new("nats://10.168.3.189:4222")
+		@monitor = Console::CFMonitor.new("nats://10.168.3.189:4222")
 
   end
 

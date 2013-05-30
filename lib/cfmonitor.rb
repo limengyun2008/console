@@ -1,7 +1,7 @@
 require 'nats/client'
 
 module Console
-	class Monitor
+	class CFMonitor
 		HEALTH_SUFFIX="/healthz"
 		HEALTH_DOWN = "down"
 		NATS_REUQUEST_INTERVAL = 60
