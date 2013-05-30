@@ -28,7 +28,10 @@ class Server < Sinatra::Base
 
     if !login && request.path_info != '/login'
       redirect to('/login?redirect=true')
-    end
+		end
+
+		@monitor = Console::Monitor.new("nats://10.168.3.189:4222")
+
   end
 
   get '/' do
@@ -185,7 +188,11 @@ class Server < Sinatra::Base
 
   get '/api/apps' do
     nil
-  end
+	end
+
+	get '/monitor' do
+		erb :monitor, :locals => {:components => @monitor.components}
+	end
 
 end
 

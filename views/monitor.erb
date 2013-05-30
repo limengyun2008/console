@@ -1,0 +1,42 @@
+<div class="main" id="monitor">
+  <% if components.nil? %>
+      <div class="container org-container">
+        <div class="container-header">
+          <h2>没有检测到YAE的组件</h2>
+        </div>
+      </div>
+  <% else %>
+      <% for k, v in components %>
+          <div class="container org-container">
+            <div class="container-header">
+              <h2><span><%= k %></span></h2>
+            </div>
+
+            <table>
+              <thead>
+              <tr>
+                <th width="10%">No</th>
+                <th width="30%" class="right">Host</th>
+                <th width="30%" class="right">UUID</th>
+                <th width="30%" class="right">Health</th>
+              </tr>
+              </thead>
+              <tbody>
+              <% for k1, v1 in v %>
+                  <tr>
+                    <td><%= k1.to_i+1 %></td>
+                    <td class="right"><%= v1["purehost"] %></td>
+                    <td class="right"><%= v1["uuid"] %></td>
+                    <td class="right"><%= v1["health"] %></td>
+                  </tr>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
+      <% end %>
+  <% end %>
+  <p>
+    <a href="/monitor" class="button green">刷新监控</a>
+  </p>
+
+</div>
