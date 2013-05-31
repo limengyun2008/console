@@ -30,8 +30,6 @@ class Server < Sinatra::Base
       redirect to('/login?redirect=true')
 		end
 
-		@monitor = Console::CFMonitor.new("nats://10.168.3.189:4222")
-
   end
 
   get '/' do
@@ -191,7 +189,11 @@ class Server < Sinatra::Base
 	end
 
 	get '/monitor' do
-		erb :monitor, :locals => {:components => @monitor.components}
+		if @monitor.nil?
+			@monitor = Console::CFMonitor.new("nats://10.168.3.189:4222")
+		end
+		components = @monitor.getHealth
+		erb :monitor, :locals => {:components => components, :current_user => @current_user}
 	end
 
 end

@@ -18,13 +18,17 @@ module Console
 		def initialize(nats_uri)
 			@nats_uri = nats_uri
 			initProperties
-			initComponentsInfo
-			collectConponentsHealth
 		end
 
+		def getHealth
+			initComponentsInfo
+			collectConponentsHealth
+			@components
+		end
+
+		private
+
 		def initComponentsInfo
-			Thread.new do
-				loop {
 					["TERM", "INT"].each { |sig| trap(sig) { NATS.stop } }
 
 					NATS.on_error { |err| puts "Server Error: #{err}"; exit! }
@@ -32,13 +36,11 @@ module Console
 					NATS.start(:uri => @nats_uri) {
 						NATS.request('vcap.component.discover') { |response|
 							puts "Got response for Components: '#{response}'"
+							sleep(0.5)
 							NATS.stop
 							parseDiscoverResponse(response)
 						}
 					}
-					sleep(NATS_REUQUEST_INTERVAL)
-				}
-			end
 		end
 
 		def initProperties
@@ -123,50 +125,22 @@ module Console
 		end
 
 		def collectConponentsHealth
-			@uaaCollector = Thread.new do
-				loop {
-					(0..@uaaIndex-1).each { |i|
-						updateHealth(@uaa[i])
-					}
-					sleep(HEALTH_COLLECT_INTERLVAL)
-				}
-			end
+			(0..@uaaIndex-1).each { |i|
+				updateHealth(@uaa[i])
+			}
+			(0..@loginIndex-1).each { |i|
+				updateHealth(@login[i])
+			}
+			(0..@deaIndex-1).each { |i|
+				updateHealth(@dea[i])
+			}
+			(0..@ccIndex-1).each { |i|
+				updateHealth(@cc[i])
+			}
+			(0..@routerIndex-1).each { |i|
+				updateHealth(@router[i])
+			}
 
-			@loginCollector = Thread.new do
-				loop {
-					(0..@loginIndex-1).each { |i|
-						updateHealth(@login[i])
-					}
-					sleep(HEALTH_COLLECT_INTERLVAL)
-				}
-			end
-
-			@deaCollector = Thread.new do
-				loop {
-					(0..@deaIndex-1).each { |i|
-						updateHealth(@dea[i])
-					}
-					sleep(HEALTH_COLLECT_INTERLVAL)
-				}
-			end
-
-			@ccCollector = Thread.new do
-				loop {
-					(0..@ccIndex-1).each { |i|
-						updateHealth(@cc[i])
-					}
-					sleep(HEALTH_COLLECT_INTERLVAL)
-				}
-			end
-
-			@routerCollector = Thread.new do
-				loop {
-					(0..@routerIndex-1).each { |i|
-						updateHealth(@router[i])
-					}
-					sleep(HEALTH_COLLECT_INTERLVAL)
-				}
-			end
 		end
 
 		def createHealthzUrl (host, credential)
