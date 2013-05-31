@@ -3,9 +3,14 @@ require 'console'
 require 'json'
 require 'console/svn'
 require 'fileutils'
+require 'restclient'
+require 'sinatra/synchrony'
 
+require 'faraday'
+Faraday.default_adapter = :em_synchrony
 
 class Server < Sinatra::Base
+  register Sinatra::Synchrony
 
   include Console
 
@@ -91,12 +96,12 @@ class Server < Sinatra::Base
     app = @client.app
     app.name = name
     app.total_instances = 1 # <- set the number of instances you want
-    app.memory = 128 # <- set the allocated amount of memory
+    app.memory = 512 # <- set the allocated amount of memory
     #app.buildpack = buildpack
     app.space = space
     app.create!
 
-    domain = @client.domain_by_name "limy.cf2.youdao.com"
+    domain = @client.domain_by_name  org.name + ".cf2.youdao.com"
     route = @client.route
     route.host = name
     route.domain = domain
@@ -159,14 +164,28 @@ class Server < Sinatra::Base
     redirect to("/app/#{guid}")
   end
 
+  get '/test' do
+    #Sinatra::Synchrony.overload_tcpsocket!
 
+    html = Faraday.get "http://rubygems.org/gems/rest-client"
+    html.body
+    #'html'
+  end
 
-  get '/api/orgs' do
+  get '/api/app/:guid/instances' do |guid|
+    content_type :json
+    puts "querying instances"
+    app = @client.app guid
+    #app = { :healthy? => true, :instances => ["1"]}
+    app.to_json
+  end
+
+  get '/api/app/:guid/health' do |guid|
     content_type :json
 
-    orgs = @client.organizations_by_user_guid @client.current_user.guid
-    #puts orgs[0].public_methods
-    orgs.to_json
+    app = @client.app guid
+
+    app.to_json
   end
 
   get '/api/org/:guid' do |guid|
@@ -218,9 +237,24 @@ module CFoundry::V2
     def to_json(*a)
       hash = {
           :name => name,
+          :stats => stats,
+          :total_instances => total_instances,
+          :instances => instances,
+          :healthy? => healthy?
       }
 
       hash.to_json
+    end
+
+    class Instance
+      def to_json(*a)
+        hash = {
+            :id => id,
+            :manifest => @manifest
+        }
+
+        hash.to_json
+      end
     end
   end
 end

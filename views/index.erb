@@ -10,23 +10,31 @@
               <table>
                 <thead>
                 <tr>
-                  <th width="15%">Name</th>
+                  <th width="35%">Name</th>
                   <th width="15%" class="right">Mem</th>
                   <th width="10%" class="right">Status</th>
-                  <th width="60%" class="right">Url</th>
+                  <th width="40%" class="right">Url</th>
                 </tr>
                 </thead>
                 <tbody>
                 <% for space in org.spaces %>
                     <% for app in space.apps %>
-                        <tr>
-                          <td><a href="/app/<%= app.guid %>"><%= app.name %></a></td>
+                        <tr id="<%= app.guid %>" class="app-row">
+                          <td><a
+                          <% if app.detected_buildpack == "PHP" %>
+                                  class="php"
+                          <% elsif app.detected_buildpack == "Python" %>
+                                class="python"
+                          <% elsif app.detected_buildpack == "JAVA WEB" %>
+                                class="java"
+                          <% end %>
+                          href="/app/<%= app.guid %>"><%= app.name %></a></td>
                           <td class="right">
 
                             <%= app.total_instances %> X <%= app.memory %> MB
 
                           </td>
-                          <td class="right"></td>
+                          <td class="center"><span class="status"></span></td>
                           <td class="right">
                             <% for route in app.routes %>
                                 <span><a href="http://<%= route.name %>"><%= route.name %></a></span>

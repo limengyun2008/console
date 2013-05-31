@@ -1,8 +1,18 @@
-
+<script>
+  var GLOBAL = {
+      app_guid : '<%=app.guid %>'
+  }
+</script>
 <div class="main" id="app-page">
     <div class="container clear-fix">
         <div class="container-header">
-            <h2><%= app.name %></h2>
+            <h2<% if app.detected_buildpack == "PHP" %>
+               class="php"
+               <% elsif app.detected_buildpack == "Python" %>
+               class="python"
+               <% elsif app.detected_buildpack == "JAVA WEB" %>
+               class="java"
+               <% end %>><%= app.name %></h2>
         </div>
         
         <div class="menu">
@@ -16,54 +26,37 @@
         <div class="contents">
             <div class="tab-content active" id="control">
               <h3>App is <%=app.state %></h3>
-              <form action="/app/<%=app.guid %>" method="post">
-                <button class="big green">Start</button>
-                <input type="hidden" name="action" value="start" />
-                </form>
-              <form action="/app/<%=app.guid %>" method="post">
-                <input type="hidden" name="action" value="stop" />
-                <button class="big red disable">Stop</button>
-              </form>
 
-                <button class="big blue">Restart</button>
+              <% if app.state == "STARTED" %>
+                  <form action="/app/<%=app.guid %>" method="post">
+                    <input type="hidden" name="action" value="stop" />
+                    <button class="big red ">Stop</button>
+                  </form>
+                  <form action="/app/<%=app.guid %>" method="post">
+                    <input type="hidden" name="action" value="restart" />
+                    <button class="big blue">Restart</button>
+                  </form>
+              <% else  app.state == "STOPED" %>
+                  <form action="/app/<%=app.guid %>" method="post">
+                    <button class="big green">Start</button>
+                    <input type="hidden" name="action" value="start" />
+                  </form>
+              <% end %>
+
+<!--
                 <hr/>
               <h3>App Resources</h3>
-
+-->
 
               <hr/>
               <h3>Instances</h3>
 
-             <%if app.running? %>
-              <table>
-                <thead>
-                <tr>
-                  <th>#</th>
-                  <th class="right">Status</th>
-                  <th class="right">CPU</th>
-                  <th class="right">Memory</th>
-                  <th class="right">Disk</th>
-                </tr>
-                </thead>
-                <tbody>
-                    <%for key,value in app.stats %>
-                    <tr>
-                      <td><%= key %></td>
-                      <td class="right"><%= value[:state] %></td>
-                      <td class="right"><%= value[:stats][:usage][:cpu] %></td>
-                      <td class="right"><%= value[:stats][:usage][:mem]/(1024*1024) %> MB</td>
-                      <td class="right"><%= value[:stats][:usage][:disk]/(1024*1024) %> MB</td>
-                    </tr>
-                    <% end %>
-                </tbody>
-              </table>
-            <% else %>
-              no running instances
-            <% end %>
+              <div id="instances-area"></div>
             </div>
 
             <div class="tab-content" id="deploy">
               <h3>代码库地址</h3>
-              <a href="https://dev.corp.youdao.com/svn/outfox/incubator/yaeapps/<%= app.guid %>">
+              <a target="_blank" href="https://dev.corp.youdao.com/svn/outfox/incubator/yaeapps/<%= app.guid %>">
                 https://dev.corp.youdao.com/svn/outfox/incubator/yaeapps/<%= app.guid %>
               </a>
               <hr/>

@@ -38,7 +38,7 @@ hr {
 }
 
 .header {
-    margin: 40px 0;
+    margin: 40px 0 20px;
     line-height: 32px;
 }
 
@@ -258,6 +258,38 @@ table tbody tr td:last-child {
 }
 /* ===login page end=== */
 
+/* ===index page start=== */
+#index table td a {
+    height: 80px;
+    line-height: 80px;
+    display: inline-block;
+    padding-left: 100px;
+}
+#index a.php {
+    background: url(../image/icon-php.png) left center no-repeat;
+}
+
+#index a.python {
+    background: url(../image/icon-python-wsgi.png) left center no-repeat;
+}
+
+#index .status {
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+    vertical-align: middle;
+    background: url(../image/loader.gif) center center no-repeat;
+}
+
+#index .status.running {
+    background: url(../image/icon-ok.png) center center no-repeat;
+}
+
+#index .status.alert {
+    background: url(../image/icon-alert.png) center center no-repeat;
+}
+/* ===index page end=== */
+
 /* ===create-app page start=== */
 #create-app-page input {
     width: 610px;
@@ -285,7 +317,7 @@ table tbody tr td:last-child {
     background: url(../image/icon-php.png) left center no-repeat;
 }
 
-.type-item.python-wsgi {
+.type-item.python {
     background: url(../image/icon-python-wsgi.png) left center no-repeat;
 }
 
@@ -321,7 +353,7 @@ table tbody tr td:last-child {
 }
 
 .main h2{
-    line-height: 40px;
+    line-height: 70px;
     font-size: 24px;
     color: #41abe1;
     font-weight: normal;
@@ -355,6 +387,17 @@ table tbody tr td:last-child {
 }
 
 /* ===app page start=== */
+
+
+#app-page h2.php {
+    background: url(../image/icon-php.png) right center no-repeat;
+}
+
+#app-page h2.python {
+    background: url(../image/icon-python-wsgi.png) right center no-repeat;
+}
+
+
 #app-page .container .menu {
     float: left;
     width: 25%;
