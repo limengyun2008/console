@@ -1,16 +1,17 @@
 require 'sinatra/base'
 require 'console'
+require 'client'
 require 'json'
 require 'console/svn'
 require 'fileutils'
 require 'restclient'
-require 'sinatra/synchrony'
-
-require 'faraday'
-Faraday.default_adapter = :em_synchrony
+#require 'sinatra/synchrony'
+require 'model'
+#require 'faraday'
+#Faraday.default_adapter = :em_synchrony
 
 class Server < Sinatra::Base
-  register Sinatra::Synchrony
+  #register Sinatra::Synchrony
 
   include Console
 
@@ -20,7 +21,9 @@ class Server < Sinatra::Base
     @access_token = request.cookies["access_token"]
     if @access_token
       begin
-        @client = cloudfoundry_client(nil, CFoundry::AuthToken.new(@access_token))
+        @cfoundry_client = Client.new("http://api.cf2.youdao.com" , CFoundry::AuthToken.new(@access_token))
+        @client = @cfoundry_client.client
+        #@client = cloudfoundry_client(nil, CFoundry::AuthToken.new(@access_token))
         @current_user = @client.current_user
         login = @client.logged_in?
       rescue Exception => e
@@ -37,10 +40,10 @@ class Server < Sinatra::Base
   end
 
   get '/' do
-    #puts @client.public_methods
+
     orgs = @client.organizations_by_user_guid @client.current_user.guid
     #puts @client.public_methods
-
+    puts "122"
     erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
       erb :index, :locals => {:orgs => orgs}
     end
@@ -166,9 +169,11 @@ class Server < Sinatra::Base
 
   get '/test' do
     #Sinatra::Synchrony.overload_tcpsocket!
+    RestClient.get 'http://rubygems.org/gems/rest-client'
 
-    html = Faraday.get "http://rubygems.org/gems/rest-client"
-    html.body
+    #html = Faraday.get "http://rubygems.org/gems/rest-client"
+
+    #html.body
     #'html'
   end
 
@@ -183,78 +188,9 @@ class Server < Sinatra::Base
   get '/api/app/:guid/health' do |guid|
     content_type :json
 
-    app = @client.app guid
-
-    app.to_json
-  end
-
-  get '/api/org/:guid' do |guid|
-    content_type :json
-    org = @client.Organization guid
-    {:guid => org.guid, :name => org.name }.to_json
-  end
-
-  get '/api/org/:guid/apps' do |guid|
-    content_type :json
-
-    spaces = @client.spaces_by_organization_guid "af78c950-6a67-4277-aa27-f2a246f46e0e"
-    apps = @client.apps_by_organization_guid "af78c950-6a67-4277-aa27-f2a246f46e0e"
-    apps.to_json
-  end
-
-  get '/api/apps' do
-    nil
+    {:healthy? => @cfoundry_client.get_app_health( guid ) }.to_json
   end
 
 end
 
 
-require "cfoundry/v2/model"
-module CFoundry::V2
-  class Organization < Model
-    def to_json(*a)
-      hash = {
-          :guid => guid,
-          :name => name,
-          :spaces => spaces
-      }
-
-      hash.to_json
-    end
-  end
-
-  class Space < Model
-    def to_json(*a)
-      hash = {
-          :name => name,
-      }
-
-      hash.to_json
-    end
-  end
-
-  class App < Model
-    def to_json(*a)
-      hash = {
-          :name => name,
-          :stats => stats,
-          :total_instances => total_instances,
-          :instances => instances,
-          :healthy? => healthy?
-      }
-
-      hash.to_json
-    end
-
-    class Instance
-      def to_json(*a)
-        hash = {
-            :id => id,
-            :manifest => @manifest
-        }
-
-        hash.to_json
-      end
-    end
-  end
-end
