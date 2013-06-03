@@ -3,6 +3,7 @@ require 'console'
 require 'json'
 require 'console/svn'
 require 'fileutils'
+require 'cfmonitor'
 
 
 class Server < Sinatra::Base
