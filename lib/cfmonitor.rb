@@ -58,9 +58,9 @@ module Console
 
 			@@components["uaa"] = @uaa
 			@@components["dea"] = @dea
-			@@components["login"] = @login
+			@@components["login_server"] = @login
 			@@components["router"] = @router
-			@@components["cc"] = @cc
+			@@components["cloud_controller"] = @cc
 		end
 
 		def parseDiscoverResponse(response)
