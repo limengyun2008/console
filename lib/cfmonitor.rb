@@ -36,7 +36,6 @@ module Console
 				nid = NATS.request('vcap.component.discover') { |response|
 					puts "Got response for Components: '#{response}'"
 					NATS.stop
-					sleep(0.2)
 					parseDiscoverResponse(response)
 				}
 			}
@@ -57,19 +56,18 @@ module Console
 
 			@uaaIndex=@deaIndex=@routerIndex=@loginIndex=@ccIndex=0
 
-			@components["uaa"] = @uaa
-			@components["dea"] = @dea
-			@components["login"] = @login
-			@components["router"] = @router
-			@components["cc"] = @cc
+			@@components["uaa"] = @uaa
+			@@components["dea"] = @dea
+			@@components["login"] = @login
+			@@components["router"] = @router
+			@@components["cc"] = @cc
 		end
 
 		def parseDiscoverResponse(response)
 			response.each_line { |line|
 				component = parseJsonToComponent(line)
-				type = specifyComponent(component)
+				collectConponentsHealth(specifyComponent(component))
 			}
-			collectConponentsHealth(type)
 			@@components_cache = @@components
 		end
 
@@ -150,34 +148,33 @@ module Console
 					(0..@routerIndex-1).each { |i|
 						updateHealth(@router[i])
 					}
+				else
+					raise "Cannot collect health " + type
 			end
-		else
-			raise "Cannot collect health " + type
 		end
 
-	end
+		def createHealthzUrl (host, credential)
+			"http://" + credential[0]+":"+credential[1] + "@" + host + HEALTH_SUFFIX
+		end
 
-	def createHealthzUrl (host, credential)
-		"http://" + credential[0]+":"+credential[1] + "@" + host + HEALTH_SUFFIX
-	end
+		def updateHealth(com)
+			url = createHealthzUrl(com["host"], com["credentials"])
+			result = `curl -s #{url}`
+			if $?.to_i == 0
+				if com["type"] == "Router"
+					com["health"]=parseJsonToComponent(result)["health"]
+				else
+					com["health"]=result
+				end
 
-	def updateHealth(com)
-		url = createHealthzUrl(com["host"], com["credentials"])
-		result = `curl -s #{url}`
-		if $?.to_i == 0
-			if com["type"] == "Router"
-				com["health"]=parseJsonToComponent(result)["health"]
 			else
-				com["health"]=result
+				com["health"]=HEALTH_DOWN
 			end
-
-		else
-			com["health"]=HEALTH_DOWN
 		end
-	end
 
-	def retriveHost(hostWithPort)
-		hostWithPort.slice(0, hostWithPort.index(":"))
+		def retriveHost(hostWithPort)
+			hostWithPort.slice(0, hostWithPort.index(":"))
+		end
 	end
 end
 
