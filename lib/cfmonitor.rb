@@ -128,7 +128,7 @@ module Console
 		end
 
 		def collectConponentsHealth(type)
-			case info["type"].downcase
+			case type.downcase
 				when "uaa" then
 					(0..@uaaIndex-1).each { |i|
 						updateHealth(@uaa[i])
