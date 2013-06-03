@@ -34,7 +34,6 @@ module Console
 
 			NATS.start(:uri => @nats_uri) {
 				nid = NATS.request('vcap.component.discover') { |response|
-					puts "Got response for Components: '#{response}'"
 					NATS.stop
 					parseDiscoverResponse(response)
 				}
