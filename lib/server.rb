@@ -5,13 +5,15 @@ require 'json'
 require 'console/svn'
 require 'fileutils'
 require 'restclient'
-#require 'sinatra/synchrony'
+require 'sinatra/synchrony'
 require 'model'
+require 'rexml/document'
+
 #require 'faraday'
 #Faraday.default_adapter = :em_synchrony
 
 class Server < Sinatra::Base
-  #register Sinatra::Synchrony
+  register Sinatra::Synchrony
 
   include Console
 
@@ -21,7 +23,7 @@ class Server < Sinatra::Base
     @access_token = request.cookies["access_token"]
     if @access_token
       begin
-        @cfoundry_client = Client.new("http://api.cf2.youdao.com" , CFoundry::AuthToken.new(@access_token))
+        @cfoundry_client = Client.new("http://api.cf2.youdao.com" , @access_token)
         @client = @cfoundry_client.client
         #@client = cloudfoundry_client(nil, CFoundry::AuthToken.new(@access_token))
         @current_user = @client.current_user
@@ -43,7 +45,7 @@ class Server < Sinatra::Base
 
     orgs = @client.organizations_by_user_guid @client.current_user.guid
     #puts @client.public_methods
-    puts "122"
+    #puts "122"
     erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
       erb :index, :locals => {:orgs => orgs}
     end
@@ -160,11 +162,23 @@ class Server < Sinatra::Base
           app.restart!(true)
         end
 
+      when "delete"
+
+        app.routes.each do |route|
+          route.delete!
+        end
+        app.delete!
+
       else
         logger.error 'wrong action!'
     end
+    if action == "delete"
+      content_type :json
+      {:result => true}.to_json
+    else
+      redirect to("/app/#{guid}")
+    end
 
-    redirect to("/app/#{guid}")
   end
 
   get '/test' do
@@ -173,8 +187,6 @@ class Server < Sinatra::Base
 
     #html = Faraday.get "http://rubygems.org/gems/rest-client"
 
-    #html.body
-    #'html'
   end
 
   get '/api/app/:guid/instances' do |guid|
@@ -185,12 +197,34 @@ class Server < Sinatra::Base
     app.to_json
   end
 
-  get '/api/app/:guid/health' do |guid|
+  get '/api/app/:guid/stats' do |guid|
     content_type :json
 
-    {:healthy? => @cfoundry_client.get_app_health( guid ) }.to_json
+    @cfoundry_client.get_app_health( guid ).to_json
   end
 
+  get '/api/app/:guid/svnlog' do |guid|
+    content_type :json
+    svn = Svn.new(guid, nil)
+    #puts "svn log #{svn.svn_app_dir}  --xml --limit 10  --username limy --password LMYlmy111"
+    xml_doc = `svn log #{svn.svn_app_dir}  --xml --limit 10  --username limy --password LMYlmy111`
+    #puts xml_doc
+    doc = REXML::Document.new(xml_doc)
+    elm_a = doc.elements.to_a("//log/logentry")
+    result  = []
+    #puts elm_a.size
+
+    (0..elm_a.size-1).each do |i|
+      log = {
+            :revision => elm_a[i].attributes["revision"],
+            :author => elm_a[i].elements["author"][0],
+            :date => elm_a[i].elements["date"][0],
+            :msg => elm_a[i].elements["msg"][0]
+      }
+      result.push log
+    end
+    result.to_json
+  end
 end
 
 

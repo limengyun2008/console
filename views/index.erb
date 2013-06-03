@@ -19,14 +19,16 @@
                 <tbody>
                 <% for space in org.spaces %>
                     <% for app in space.apps %>
-                        <tr id="<%= app.guid %>" class="app-row">
+                        <tr id="<%= app.guid %>" class="app-row <%= app.detected_buildpack %>">
                           <td><a
                           <% if app.detected_buildpack == "PHP" %>
                                   class="php"
                           <% elsif app.detected_buildpack == "Python" %>
                                 class="python"
-                          <% elsif app.detected_buildpack == "JAVA WEB" %>
+                          <% elsif app.detected_buildpack == "Ant Java Web" %>
                                 class="java"
+                          <% else %>
+                                class="unknown"
                           <% end %>
                           href="/app/<%= app.guid %>"><%= app.name %></a></td>
                           <td class="right">

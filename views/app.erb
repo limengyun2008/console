@@ -51,7 +51,9 @@
               <hr/>
               <h3>Instances</h3>
 
-              <div id="instances-area"></div>
+              <div id="instances-area">
+                <img src="/image/loader.gif" /><span>querying</span>
+              </div>
             </div>
 
             <div class="tab-content" id="deploy">
@@ -64,7 +66,14 @@
                 <div class="update-version">
                     <form action="/app/<%= app.guid %>" method="post">
                     <input type="hidden" name="action"  value="update" />
-                    <input type="text" placeholder="输入代码库的版本号"  name="revision"  />
+                    <input type="text" placeholder="输入代码库的版本号"  name="revision" id="revision"   />
+
+                        <ul class="tip" style="display: none;">
+                          <li>123</li>
+                          <li>123</li>
+                          <li>123</li>
+                        </ul>
+
                     <button type="submit" class="button green"
                        href="javascript:void(0);">deploy</button>
                     </form>

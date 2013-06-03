@@ -1,25 +1,43 @@
 require 'faraday'
-#Faraday.default_adapter = :em_synchrony
+Faraday.default_adapter = :em_synchrony
 
 class Client
   attr_reader :client,:target
 
-  def initialize(target, token)
+  def initialize(target, access_token)
+    @access_token = access_token
     @target = target
-    @client = CFoundry::V2::Client.new(target, token)
+    @token = CFoundry::AuthToken.new(@access_token)
+
+    @client = CFoundry::V2::Client.new(@target, @token)
   end
 
   def get_app_health(appid)
-    health_url = "http://limengyun.com" # "#{@target}/app/#{appid}/instances"
-    response = Faraday.get health_url
+    health_url = "#{@target}/v2/apps/#{appid}/stats"
 
-    if response.body != nil
-      #json = JSON.parse(response.body)
-      puts response.body
-      true
+    puts health_url
+    #response = Faraday.get health_url
+
+    conn = Faraday.new(:url => health_url) do |faraday|
+      faraday.request  :url_encoded             # form-encode POST params
+      #faraday.response :logger                  # log requests to STDOUT
+      faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
     end
 
-    false
+    response = conn.get do |req|
+      req.headers['Authorization'] = @access_token
+    end
+
+    if response.body != nil
+      puts response.body
+      json = JSON.parse(response.body)
+      puts json
+      if !json["code"] && !json["description"]
+        return json
+      end
+    end
+
+    {:stats => false}
   end
 
   def get_app_instances(appid)
