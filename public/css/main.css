@@ -484,7 +484,7 @@ table tbody tr td:last-child {
 }
 
 #app-page ul.tip {
-    width: 500px;
+    width: 510px;
     position: absolute;
     z-index: 10;
     background: #ffffff;
@@ -501,8 +501,6 @@ table tbody tr td:last-child {
 #app-page ul.tip li:hover {
     background: #cccccc;
 }
-
-
 
 #app-page #deploy .edit {
     background: #2fa700 url("../image/icon-edit.png") 10px center no-repeat;

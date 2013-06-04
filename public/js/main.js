@@ -173,7 +173,7 @@
         var html = "";
         for (var i=0; i< data.length; i++) {
             var tmp = "<li data-revision='{{key}}'>{{value}}</li>";
-            var t = data[i].revision + ": by " + data[i].author + " "+ data[i].date + "<br/>" +
+            var t = data[i].revision  + " "+ data[i].date + "<br/>" +
                 data[i].msg;
             html += tmp.replace("{{key}}", data[i].revision).replace("{{value}}", t);
 

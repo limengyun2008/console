@@ -15,8 +15,6 @@ class Client
   def get_app_health(appid)
     health_url = "#{@target}/v2/apps/#{appid}/stats"
 
-    puts health_url
-    #response = Faraday.get health_url
 
     conn = Faraday.new(:url => health_url) do |faraday|
       faraday.request  :url_encoded             # form-encode POST params

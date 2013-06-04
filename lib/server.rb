@@ -42,14 +42,11 @@ class Server < Sinatra::Base
   end
 
   get '/' do
-
     orgs = @client.organizations_by_user_guid @client.current_user.guid
-    #puts @client.public_methods
-    #puts "122"
+
     erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
       erb :index, :locals => {:orgs => orgs}
     end
-
 
   end
 
@@ -61,7 +58,8 @@ class Server < Sinatra::Base
     username = params['username']
     password = params['password']
 
-    @client = cloudfoundry_client()
+    @cfoundry_client = Client.new("http://api.cf2.youdao.com" , nil)
+    @client = @cfoundry_client.client
     access_token = @client.login(username,password)
     if access_token
       response.set_cookie("access_token", :value => access_token.auth_header.to_s )
@@ -207,7 +205,7 @@ class Server < Sinatra::Base
     content_type :json
     svn = Svn.new(guid, nil)
     #puts "svn log #{svn.svn_app_dir}  --xml --limit 10  --username limy --password LMYlmy111"
-    xml_doc = `svn log #{svn.svn_app_dir}  --xml --limit 10  --username limy --password LMYlmy111`
+    xml_doc = `svn log #{svn.svn_app_dir} --stop-on-copy --xml --limit 10  --username limy --password LMYlmy111`
     #puts xml_doc
     doc = REXML::Document.new(xml_doc)
     elm_a = doc.elements.to_a("//log/logentry")
