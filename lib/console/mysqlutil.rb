@@ -1,5 +1,4 @@
 require 'mysql2'
-require 'timeout'
 
 class MysqlUtil
 	USER_TABLE_NAME = "mysql.yae_mysql_user"
@@ -9,7 +8,6 @@ class MysqlUtil
             db_passwd VARCHAR(128) NOT NULL
         );"
 	RANDOM_LENGTH = 10
-	TIMEOUT_LONG = 10
 
 	attr_reader :client
 
@@ -19,7 +17,6 @@ class MysqlUtil
 		end
 		@config = config
 		exec_async(CREATE_USERTABLE_SQL)
-		puts "Initialized Mysql Configuration"
 
 	end
 
@@ -57,9 +54,11 @@ FLUSH PRIVILEGES;
 		end
 		sql = "
 DELETE FROM mysql.user where user='#{dbname}';
-DROP DATABASE if not exists #{dbname};
-DELETE FROM #{USER_TABLE_NAME} where dbname='#{dbname}';
-DELETE FROM mysql.db where dbname='#{dbname}';"
+DROP DATABASE if exists #{dbname};
+DELETE FROM #{USER_TABLE_NAME} where db_name='#{dbname}';
+DELETE FROM mysql.db where db='#{dbname}';"
+		puts "Remove DB"
+		pusts sql
 		exec_async(sql)
 	end
 
@@ -93,39 +92,22 @@ DELETE FROM mysql.db where dbname='#{dbname}';"
 
 	def query_async(sql)
 		initClient
-		Timeout.timeout(TIMEOUT_LONG) {
-			@client.query(sql, :async => true)
-		}
-	rescue Exception
-		puts "Timeout in query_async, sql: " + sql
+		@client.query(sql, :async => true)
 	end
 
 	def exec_async(sql)
 		initClient
-		Timeout.timeout(TIMEOUT_LONG) {
-			@client.query(sql, :async => true)
-		}
-	rescue Exception
-		puts "Timeout in exec_async, sql: " + sql
+		@client.query(sql, :async => true)
 	end
 
 	def query_sync(sql)
 		initClient
-		Timeout.timeout(TIMEOUT_LONG) {
-			@client.query(sql, :async => false)
-		}
-	rescue Exception
-		puts "Timeout in query_sync, sql: " + sql
-
+		@client.query(sql, :async => false)
 	end
 
 	def exec_sync(sql)
 		initClient
-		Timeout.timeout(TIMEOUT_LONG) {
-			@client.query(sql, :async => false)
-		}
-	rescue Exception
-		puts "Timeout in exec_sync, sql: " + sql
+		@client.query(sql, :async => false)
 	end
 
 	def randomStr()
