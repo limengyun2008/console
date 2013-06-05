@@ -50,8 +50,6 @@ DELETE FROM mysql.user where user='#{dbname}';
 DROP DATABASE if exists #{dbname};
 DELETE FROM #{USER_TABLE_NAME} where db_name='#{dbname}';
 DELETE FROM mysql.db where db='#{dbname}';"
-		puts "Remove DB"
-		pusts sql
 		exec_async(sql)
 	end
 
@@ -67,7 +65,7 @@ DELETE FROM mysql.db where db='#{dbname}';"
 	private
 
 	def initClient
-		@client = Mysql2::Client.new(:host => @config["host"], :port => @config["port"].to_i, :username => @config["username"], :password => @config["password"], :encoding => 'utf8', :flags => Mysql2::Client::MULTI_STATEMENTS)
+		@client = Mysql2::Client.new(:host => @config["host"].to_s, :port => @config["port"].to_i, :username => @config["username"].to_s, :password => @config["password"].to_s, :encoding => 'utf8', :flags => Mysql2::Client::MULTI_STATEMENTS)
 		@client.query_options.merge!(:cast_booleans => true)
 	end
 
