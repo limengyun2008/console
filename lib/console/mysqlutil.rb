@@ -27,10 +27,6 @@ class MysqlUtil
 		dbname = username + randomStr
 		dbpwd = randomStr
 
-		if !checkDBAvaiable(dbname)
-			createDB(username)
-		end
-
 		sql = "
 CREATE DATABASE if not exists #{dbname};
 INSERT INTO #{USER_TABLE_NAME}(db_name, db_user, db_passwd) VALUES('#{dbname}', '#{username}', '#{dbpwd}');
@@ -49,9 +45,6 @@ FLUSH PRIVILEGES;
 			raise "Your username is empty, please check it."
 		end
 
-		if !DBMatch(dbname, dbpasswd)
-			raise "Wrong DBname and DBpassword"
-		end
 		sql = "
 DELETE FROM mysql.user where user='#{dbname}';
 DROP DATABASE if exists #{dbname};
@@ -76,18 +69,6 @@ DELETE FROM mysql.db where db='#{dbname}';"
 	def initClient
 		@client = Mysql2::Client.new(:host => @config["host"], :port => @config["port"].to_i, :username => @config["username"], :password => @config["password"], :encoding => 'utf8', :flags => Mysql2::Client::MULTI_STATEMENTS)
 		@client.query_options.merge!(:cast_booleans => true)
-	end
-
-	def DBMatch (dbname, dbpasswd)
-		sql = "SELECT * FROM #{USER_TABLE_NAME} WHERE db_name='#{dbname}' and db_passwd='#{dbpasswd}';"
-		result = query_sync(sql)
-		result.count > 0
-	end
-
-	def checkDBAvaiable(dbname)
-		sql = "SELECT * FROM information_schema.schemata WHERE SCHEMA_NAME='#{dbname}';"
-		result = exec_sync(sql)
-		result.count <= 0
 	end
 
 	def query_async(sql)
