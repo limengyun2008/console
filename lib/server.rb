@@ -207,8 +207,8 @@ class Server < Sinatra::Base
 	end
 
 	get '/db' do
-		dbclient = Console::MysqlUtil.new(@@config['mysql'])
-		result = dbclient.listUserDB(@current_user.username)
+		dbclient = MysqlUtil.new(@@config['mysql'])
+		result = dbclient.listUserDB(usernameFromEmail(@current_user.email))
 
 		erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
 			erb :database, :locals => {:databases => result}
@@ -216,17 +216,24 @@ class Server < Sinatra::Base
 	end
 
 	get '/db/:dbname/:dbpasswd' do
-		dbclient = Console::MysqlUtil.new(@@config['mysql'])
+		dbclient = MysqlUtil.new(@@config['mysql'])
 		dbclient.removeDB(params[:dbname], params[:dbpasswd])
 
 		redirect("/db")
 	end
 
 	get '/db/create' do
-		dbclient = Console::MysqlUtil.new(@@config['mysql'])
-		dbclient.createDB(@current_user.username)
+		dbclient = MysqlUtil.new(@@config['mysql'])
+		dbclient.createDB(usernameFromEmail(@current_user.email))
 
 		redirect("/db")
+	end
+
+	def usernameFromEmail(email)
+		 if email.nil?
+			 redirect("/login")
+		 end
+		 email.slice(0, email.index("@"))
 	end
 
 end
