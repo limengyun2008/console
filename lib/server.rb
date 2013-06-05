@@ -4,6 +4,7 @@ require 'json'
 require 'console/svn'
 require 'fileutils'
 require 'cfmonitor'
+require 'console/mysqlutil'
 
 
 class Server < Sinatra::Base
@@ -204,6 +205,30 @@ class Server < Sinatra::Base
 			erb :monitor, :locals => {:components => Console::CFMonitor.components}
 		end
 	end
+
+	get '/db' do
+		dbclient = Console::MysqlUtil.new(@@config['mysql'])
+		result = dbclient.listUserDB(@current_user.username)
+
+		erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
+			erb :database, :locals => {:databases => result}
+		end
+	end
+
+	get '/db/:dbname/:dbpasswd' do
+		dbclient = Console::MysqlUtil.new(@@config['mysql'])
+		dbclient.removeDB(params[:dbname], params[:dbpasswd])
+
+		redirect("/db")
+	end
+
+	get '/db/create' do
+		dbclient = Console::MysqlUtil.new(@@config['mysql'])
+		dbclient.createDB(@current_user.username)
+
+		redirect("/db")
+	end
+
 end
 
 

@@ -1,0 +1,41 @@
+<div class="main" id="database">
+  <% if databases.nil? %>
+      <div class="container org-container">
+        <div class="container-header">
+          <h2>您没有数据库，如有需要，请点击创建数据库</h2>
+        </div>
+      </div>
+  <% else %>
+      <div class="container org-container">
+        <div class="container-header">
+          <h2>数据库信息</h2>
+        </div>
+        <table>
+          <thead>
+          <tr>
+            <th width="25%">DB Name</th>
+            <th width="25%" class="right">DB User</th>
+            <th width="25%" class="right">DB Password</th>
+            <th width="25%" class="right">Remove</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% databases.each { |row| %>
+              <tr>
+                <td class="center"><%= row["db_name"] %></td>
+                <td class="center"><%= row["db_name"] %></td>
+                <td class="center"><%= row["db_passwd"] %></td>
+                <td class="center">
+                  <a href="/db/<%= row["db_name"] %>/<%= row["db_passwd"] %>" class="button green">Remove</a></td>
+              </tr>
+          <% } %>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <a href="/db/create" class="button green">创建数据库</a>&nbsp;&nbsp;&nbsp;<a href="" class="button green">访问数据库</a>
+      </p>
+
+  <% end %>
+
+</div>

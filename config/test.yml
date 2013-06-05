@@ -1,3 +1,9 @@
 ---
 nats_uri: nats://10.168.3.189:4222
+mysql:
+  host: 10.168.3.163
+  port: 3306
+  username: root
+  password: 123
+mysql_php_admin:
 

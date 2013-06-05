@@ -13,3 +13,4 @@ gem 'grit' #ruby library for git
 gem 'cf-uaa-lib' #ruby library for interact with uaa's token
 gem 'json', '~> 1.7.7'
 gem 'nats'
+gem 'mysql2'

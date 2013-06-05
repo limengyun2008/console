@@ -2,6 +2,9 @@
 
 TODO: Write a gem description
 
+## Dependency
+mysql-devel
+
 ## Installation
 
 Add this line to your application's Gemfile:
