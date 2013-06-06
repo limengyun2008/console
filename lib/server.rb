@@ -8,6 +8,8 @@ require 'restclient'
 require 'sinatra/synchrony'
 require 'model'
 require 'rexml/document'
+require 'cfmonitor'
+require 'console/mysqlutil'
 
 #require 'faraday'
 #Faraday.default_adapter = :em_synchrony
@@ -18,6 +20,12 @@ class Server < Sinatra::Base
   include Console
 
   set :root, File.expand_path('../../', __FILE__)
+
+	begin
+		@@config = YAML.load_file("config/test.yml")
+	rescue => e
+		abort "ERROR: Failed loading config: #{e}"
+	end
 
   before do
     @access_token = request.cookies["access_token"]
@@ -222,7 +230,49 @@ class Server < Sinatra::Base
       result.push log
     end
     result.to_json
-  end
-end
+	end
 
+	get '/monitor' do
+		monitor = Console::CFMonitor.new(@@config["nats_uri"])
+		redirect to("/monitor/show")
+	end
+
+	get '/monitor/show' do
+		erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
+			erb :monitor, :locals => {:components => Console::CFMonitor.components}
+		end
+	end
+
+	get '/db' do
+		dbclient = MysqlUtil.new(@@config['mysql'])
+		result = dbclient.listUserDB(usernameFromEmail(@current_user.email))
+		adminUrl = @@config["mysql_admin"]
+
+		erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
+			erb :database, :locals => {:databases => result, :dbadmin => adminUrl.to_s}
+		end
+	end
+
+	get '/db/:dbname/:dbpasswd' do
+		dbclient = MysqlUtil.new(@@config['mysql'])
+		dbclient.removeDB(params[:dbname], params[:dbpasswd])
+
+		redirect("/db")
+	end
+
+	get '/db/create' do
+		dbclient = MysqlUtil.new(@@config['mysql'])
+		dbclient.createDB(usernameFromEmail(@current_user.email))
+
+		redirect("/db")
+	end
+
+	def usernameFromEmail(email)
+		if email.nil?
+			redirect("/login")
+		end
+		email.slice(0, email.index("@"))
+	end
+
+end
 
