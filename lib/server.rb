@@ -211,7 +211,7 @@ class Server < Sinatra::Base
 		result = dbclient.listUserDB(usernameFromEmail(@current_user.email))
 
 		erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
-			erb :database, :locals => {:databases => result}
+			erb :database, :locals => {:databases => result, :dbadmin => @@config["mysql_admin"]}
 		end
 	end
 

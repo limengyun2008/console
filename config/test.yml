@@ -5,5 +5,5 @@ mysql:
   port: 3306
   username: root
   password: 123
-mysql_php_admin:
+mysql_admin: http://phpadmin.zhaodch.cf2.youdao.com/index.php
 
