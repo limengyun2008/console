@@ -209,9 +209,10 @@ class Server < Sinatra::Base
 	get '/db' do
 		dbclient = MysqlUtil.new(@@config['mysql'])
 		result = dbclient.listUserDB(usernameFromEmail(@current_user.email))
+		adminUrl = @@config["mysql_admin"]
 
 		erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
-			erb :database, :locals => {:databases => result, :dbadmin => @@config["mysql_admin"]}
+			erb :database, :locals => {:databases => result, :dbadmin => adminUrl.to_s}
 		end
 	end
 
