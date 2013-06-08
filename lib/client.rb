@@ -2,7 +2,7 @@ require 'faraday'
 Faraday.default_adapter = :em_synchrony
 
 class Client
-  attr_reader :client,:target
+  attr_reader :client,:target,:access_token
 
   def initialize(target, access_token)
     @access_token = access_token

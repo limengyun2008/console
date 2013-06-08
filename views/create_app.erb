@@ -26,7 +26,7 @@
 
 
         <h2>Step 3: Select Organization </h2>
-        <select name="org">
+        <select name="org" id="app-org">
           <% for org in orgs %>
             <option value="<%= org.guid %>"><%= org.name %></option>
           <% end %>

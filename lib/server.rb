@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'sinatra/base'
 require 'console'
 require 'client'
@@ -10,7 +12,7 @@ require 'model'
 require 'rexml/document'
 require 'cfmonitor'
 require 'console/mysqlutil'
-
+require 'beaneater'
 #require 'faraday'
 #Faraday.default_adapter = :em_synchrony
 
@@ -20,6 +22,9 @@ class Server < Sinatra::Base
   include Console
 
   set :root, File.expand_path('../../', __FILE__)
+
+  @@beanstalk = Beaneater::Pool.new(['localhost:11300'])
+  @@tube = @@beanstalk.tubes["create-app"]
 
 	begin
 		@@config = YAML.load_file("config/test.yml")
@@ -91,9 +96,12 @@ class Server < Sinatra::Base
   post '/app/create' do
     buildpack = params["buildpack"]
     name = params["name"]
-    org = params["org"]
+    org_guid = params["org"]
 
-    org = @client.organization org
+
+
+
+    org = @client.organization org_guid
     space = nil
     for s in org.spaces
       if s.name == 'default'
@@ -108,9 +116,26 @@ class Server < Sinatra::Base
     app.name = name
     app.total_instances = 1 # <- set the number of instances you want
     app.memory = 512 # <- set the allocated amount of memory
-    #app.buildpack = buildpack
+                            #app.buildpack = buildpack
     app.space = space
     app.create!
+
+    data = {
+        :buildpack => buildpack,
+        :name => name,
+        :org_guid => org.guid,
+        :target => @cfoundry_client.target,
+        :token => @cfoundry_client.access_token,
+        :app_guid => app.guid
+    }
+    @@tube.put data.to_json
+
+    content_type :json
+
+    {:result => 0, :app_guid => app.guid}.to_json
+=begin
+
+
 
     domain = @client.domain_by_name  org.name + ".cf2.youdao.com"
     route = @client.route
@@ -126,9 +151,24 @@ class Server < Sinatra::Base
     svn.mkdir_on_local
     app.upload svn.local_app_dir
 
-    app.start!(true)
+    app.start! true do |log|
+      puts log
 
-    redirect to("/app/#{app.guid}")
+      puts "--------------------------------------"
+
+
+      (1...3).each do |i|
+        @client.stream_url log  do |out|
+          puts out
+        end
+
+        sleep 5
+      end
+
+    end
+=end
+
+    #redirect to("/app/#{app.guid}")
   end
 
 
@@ -208,6 +248,31 @@ class Server < Sinatra::Base
 
     @cfoundry_client.get_app_health( guid ).to_json
   end
+
+  get '/api/app/:guid/create_log' do |guid|
+    finished = false
+    content_type :json
+    logs = []
+    tube = @@beanstalk.tubes[guid]
+    while tube.peek(:ready)
+      job = tube.reserve
+      puts job.body
+
+      if job.body == "finish"
+        finished = true
+        logs.push "正在跳转"
+      else
+        logs.push job.body.force_encoding('utf-8')
+      end
+
+
+      job.delete
+
+    end
+    {:result => 0, :finished => finished, :logs => logs}.to_json
+  end
+
+
 
   get '/api/app/:guid/svnlog' do |guid|
     content_type :json

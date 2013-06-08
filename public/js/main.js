@@ -10,7 +10,57 @@
 
     $("#create-app-page form").on("submit", function (e) {
         $("#app-buildpack").val($("div.type-item.selected").data("buildpack"));
+
+
+        $.ajax({
+            url: '/app/create',
+            method: "POST",
+            data: {
+                "buildpack" : $("#app-buildpack").val(),
+                "name" : $("#app-name").val(),
+                "org" : $("#app-org").val()
+            },
+            success: function (data) {
+                $("#model .wrp").empty();
+                $("#model, #model-mask").show();
+                //$("#model .wrp").append("<p>已发送至任务队列</p>");
+
+                queryLog(data.app_guid);
+            }
+        });
+
+        return false;
     });
+
+    var queryLog = function (app_guid) {
+        var timer = function () {
+
+            $.ajax({
+                url: '/api/app/' + app_guid + '/create_log',
+                success: function (data) {
+                    for(var i in data.logs) {
+                        $("#model .wrp").append("<p>"+ data.logs[i] +"</p>");
+                        if ( data.finished ){
+                            setTimeout( function(){
+                                location.href = "/app/" + app_guid;
+                            }, 2000);
+                        }
+                    }
+                    setTimeout( timer, 2000);
+                },
+                error : function (data) {
+
+                }
+
+
+
+            });
+        };
+        timer();
+    };
+
+
+
 
     $("#app-page .menu-item").on("click", function (e) {
         //console.log($(this).siblings());

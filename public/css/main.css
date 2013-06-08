@@ -525,7 +525,7 @@ table tbody tr td:last-child {
     left:0;
     z-index:10;
     background: #cccccc;
-    opacity: 0.5;
+    opacity: 0.7;
     display: none;
 }
 
@@ -538,11 +538,12 @@ table tbody tr td:last-child {
     background: #237c00;
     z-index: 20;
     color: #fff;
+    padding-top: 30px;
 }
 #model .model-title {
     font-size: 40px;
     line-height: 60px;
-    margin: 30px 0;
+    margin-bottom: 30px;
 }
 #model .model-action {
     text-align: right;
