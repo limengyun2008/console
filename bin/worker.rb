@@ -50,7 +50,7 @@ beanstalk.jobs.register('create-app') do |job|
 =end
 
     tube = beanstalk.tubes[app_guid]
-    tube.put "已发送至任务队列"
+    tube.put "已开始处理"
 
     app = client.app app_guid
     tube.put "正在创建svn代码仓库 "
@@ -100,7 +100,7 @@ beanstalk.jobs.register('create-app') do |job|
 
 
   rescue Exception => e
-    #puts "exception :#{e}"
+    puts "exception :#{e}"
     puts e.backtrace
   end
 =begin

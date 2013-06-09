@@ -7,3 +7,9 @@ mysql:
   password: 123
 mysql_admin: http://phpadmin.zhaodch.cf2.youdao.com/index.php
 
+svn:
+  app_base: #
+  template_base: #
+  local_base: #
+  username: #
+  password: #

@@ -23,7 +23,7 @@
             success: function (data) {
                 $("#model .wrp").empty();
                 $("#model, #model-mask").show();
-                //$("#model .wrp").append("<p>已发送至任务队列</p>");
+                $("#model .wrp").append("<p>已发送至任务队列</p>");
 
                 queryLog(data.app_guid);
             }

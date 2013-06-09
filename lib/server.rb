@@ -21,6 +21,8 @@ class Server < Sinatra::Base
 
   include Console
 
+  set :a, "aaa"
+
   set :root, File.expand_path('../../', __FILE__)
 
   @@beanstalk = Beaneater::Pool.new(['localhost:11300'])
@@ -57,6 +59,7 @@ class Server < Sinatra::Base
   get '/' do
     orgs = @client.organizations_by_user_guid @client.current_user.guid
 
+    puts "test a = #{settings.a}"
     erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
       erb :index, :locals => {:orgs => orgs}
     end
@@ -133,48 +136,13 @@ class Server < Sinatra::Base
     content_type :json
 
     {:result => 0, :app_guid => app.guid}.to_json
-=begin
 
-
-
-    domain = @client.domain_by_name  org.name + ".cf2.youdao.com"
-    route = @client.route
-    route.host = name
-    route.domain = domain
-    route.space = space
-    route.create!
-
-    app.add_route(route)
-
-    svn = Svn.new(app.guid, buildpack)
-    svn.mkdir_on_remote_svn_server
-    svn.mkdir_on_local
-    app.upload svn.local_app_dir
-
-    app.start! true do |log|
-      puts log
-
-      puts "--------------------------------------"
-
-
-      (1...3).each do |i|
-        @client.stream_url log  do |out|
-          puts out
-        end
-
-        sleep 5
-      end
-
-    end
-=end
-
-    #redirect to("/app/#{app.guid}")
   end
 
 
   get '/app/:guid' do |guid|
     app = @client.app guid
-   # puts app.public_methods
+
     erb :app , :locals => {:app => app, :current_user => @current_user}
     erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
       erb :app , :locals => {:app => app}
@@ -201,7 +169,7 @@ class Server < Sinatra::Base
         FileUtils.rm_rf "#{tmpdir}/#{guid}"
         Dir.chdir tmpdir do |dir|
           svn = Svn.new(app.guid)
-          result = `svn co #{svn.svn_app_dir}  -r #{revision}  --username limy --password LMYlmy111`
+          result = `svn co #{svn.svn_app_dir}  -r #{revision} --username #{@@config["svn"]["username"]} --password #{@@config["svn"]["password"]}`
           raise SvnException, result unless $?.to_i == 0
           app.upload "#{dir}/#{guid}"
           logger.info "uploading #{dir}/#{guid}"
@@ -239,7 +207,7 @@ class Server < Sinatra::Base
     content_type :json
     puts "querying instances"
     app = @client.app guid
-    #app = { :healthy? => true, :instances => ["1"]}
+
     app.to_json
   end
 
@@ -265,7 +233,6 @@ class Server < Sinatra::Base
         logs.push job.body.force_encoding('utf-8')
       end
 
-
       job.delete
 
     end
@@ -277,8 +244,8 @@ class Server < Sinatra::Base
   get '/api/app/:guid/svnlog' do |guid|
     content_type :json
     svn = Svn.new(guid, nil)
-    #puts "svn log #{svn.svn_app_dir}  --xml --limit 10  --username limy --password LMYlmy111"
-    xml_doc = `svn log #{svn.svn_app_dir} --stop-on-copy --xml --limit 10  --username limy --password LMYlmy111`
+
+    xml_doc = `svn log #{svn.svn_app_dir} --stop-on-copy --xml --limit 10  --username #{@@config["svn"]["username"]} --password #{@@config["svn"]["password"]}`
     #puts xml_doc
     doc = REXML::Document.new(xml_doc)
     elm_a = doc.elements.to_a("//log/logentry")
