@@ -6,16 +6,19 @@ class Svn
     @guid = guid
 
     begin
-      @config = YAML.load_file("config/test.yml")
+
+      config_file = File.join(File.dirname(__FILE__), '../..', "config/test.yml")
+      puts config_file
+      @config = YAML.load_file( config_file )
     rescue => e
       abort "ERROR: Failed loading config: #{e}"
     end
 
-    @svn_app_base = @config["svn"]["app_base"] #'https://dev.corp.youdao.com/svn/outfox/incubator/yaeapps/'
-    @svn_template_base = @config["svn"]["template_base"] #'https://dev.corp.youdao.com/svn/outfox/incubator/yaetemplates/'
-    @svn_username = @config["svn"]["username"] #'limy'
-    @svn_password = @config["svn"]["password"] #'LMYlmy111'
-    @local_base = @config["svn"]["local_base"] #'/home/lmy/yaeapps/'
+    @svn_app_base = @config["svn"]["app_base"]
+    @svn_template_base = @config["svn"]["template_base"]
+    @svn_username = @config["svn"]["username"]
+    @svn_password = @config["svn"]["password"]
+    @local_base = @config["svn"]["local_base"]
 
 
     @local_app_dir = @local_base + @guid

@@ -1,5 +1,5 @@
+#! /usr/bin/ruby
 # encoding: utf-8
-
 
 require 'beaneater'
 require 'json'
@@ -74,7 +74,7 @@ beanstalk.jobs.register('create-app') do |job|
 
     tube.put org.name + ".cf2.youdao.com 已绑定至应用"
     tube.put "应用启动中"
-    app.start!
+    app.start! true
     tube.put "应用已启动"
 
     tube.put "finish"

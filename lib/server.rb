@@ -102,8 +102,6 @@ class Server < Sinatra::Base
     org_guid = params["org"]
 
 
-
-
     org = @client.organization org_guid
     space = nil
     for s in org.spaces
@@ -214,7 +212,7 @@ class Server < Sinatra::Base
   get '/api/app/:guid/stats' do |guid|
     content_type :json
 
-    @cfoundry_client.get_app_health( guid ).to_json
+    @cfoundry_client.get_app_stats( guid ).to_json
   end
 
   get '/api/app/:guid/create_log' do |guid|

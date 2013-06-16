@@ -12,7 +12,7 @@ class Client
     @client = CFoundry::V2::Client.new(@target, @token)
   end
 
-  def get_app_health(appid)
+  def get_app_stats(appid)
     health_url = "#{@target}/v2/apps/#{appid}/stats"
 
 
