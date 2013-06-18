@@ -11,6 +11,7 @@ module Console
 		attr_reader :router, :routerIndex, :routerHostHolder
 		attr_reader :cc, :ccIndex, :ccHostHolder
 		attr_reader :login, :loginIndex, :loginHostHolder
+		attr_reader :hm, :hmIndex, :hmHostHolder
 
 		@@components = Hash.new
 		@@components_cache = nil
@@ -46,20 +47,23 @@ module Console
 			@router = Hash.new
 			@cc = Hash.new
 			@login = Hash.new
+			@hm = Hash.new
 
 			@uaaHostHolder = Array.new
 			@deaHostHolder = Array.new
 			@routerHostHolder = Array.new
 			@ccHostHolder = Array.new
 			@loginHostHolder = Array.new
+			@hmHostHolder = Array.new
 
-			@uaaIndex=@deaIndex=@routerIndex=@loginIndex=@ccIndex=0
+			@uaaIndex=@deaIndex=@routerIndex=@loginIndex=@ccIndex=@hmIndex=0
 
-			@@components["uaa"] = @uaa
-			@@components["dea"] = @dea
-			@@components["login_server"] = @login
 			@@components["router"] = @router
+			@@components["dea"] = @dea
 			@@components["cloud_controller"] = @cc
+			@@components["uaa"] = @uaa
+			@@components["login_server"] = @login
+			@@components["health_manager"] = @hm
 		end
 
 		def parseDiscoverResponse(response)
@@ -120,6 +124,15 @@ module Console
 						@ccIndex+=1
 						type = "cc"
 					end
+				when "healthmanager" then
+					if !@hmHostHolder.include? info["host"]
+						@hm[@hmIndex]=info
+						@hm[@hmIndex]["host"] = @hm[@hmIndex]["host"]
+						@hm[@hmIndex]["purehost"] = retriveHost info["host"]
+						@hmHostHolder.push @hm[@hmIndex]["host"]
+						@hmIndex+=1
+						type = "hm"
+					end
 				else
 					raise "Cannot parse response" + info
 			end
@@ -146,6 +159,10 @@ module Console
 				when "router" then
 					(0..@routerIndex-1).each { |i|
 						updateHealth(@router[i])
+					}
+				when "hm" then
+					(0..@hmIndex-1).each { |i|
+						updateHealth(@hm[i])
 					}
 				else
 					raise "Cannot collect health " + type
