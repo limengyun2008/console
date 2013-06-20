@@ -25,15 +25,10 @@
           </thead>
           <tbody>
           <% for guid, droplet in appstats %>
-              <% app = appinfo[guid] %>
               <tr>
                 <td><%= guid %></td>
-                <td><%= app.name %></td>
-                <td>
-                  <% for route in app.routes %>
-                      <span><a href="http://<%= route.name %>"><%= route.name %></a></span>
-                  <% end %>
-                </td>
+                <td><%= droplet["appname"] %></td>
+                <td><%= droplet["route"] %></td>
                 <td><%= droplet["package_state"] %></td>
                 <td><%= droplet["state"] %></td>
                 <td><%= droplet["num_instances"] %></td>

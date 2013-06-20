@@ -282,13 +282,19 @@ class Server < Sinatra::Base
 		if $?.to_i == 0
 			result = JSON.parse(jsonResult)
 			droplets = result["droplets"]
-			apps = Hash.new
 			droplets.each { |appguid, droplet|
 				app = @client.app appguid
-				apps[appguid] = app
+				droplet["appname"] = app.name
+				droplet["route"] = "No Route"
+
+				begin
+					droplet["route"] = app.url
+				rescue => e
+					puts app.routes.to_a.inspect
+				end
 			}
 			erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
-				erb :appstats, :locals => {:apperror => false, :appguid =>nil, :appstats => droplets, :appinfo => apps}
+				erb :appstats, :locals => {:apperror => false, :appguid =>nil, :appstats => droplets}
 			end
 		else
 			redirect to("/appstats/error")
