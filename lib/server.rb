@@ -148,7 +148,7 @@ class Server < Sinatra::Base
   end
 
   post '/app/:guid' do |guid|
-    app = @client.app guid
+		app = @client.app guid
 
     action = params["action"]
 
@@ -273,13 +273,61 @@ class Server < Sinatra::Base
 		end
 	end
 
+	get '/appstats' do
+		if @@config["stats_uri"].nil?
+			redirect to("/appstats/error")
+		end
+
+		jsonResult = `curl -s #{@@config["stats_uri"]}`
+		if $?.to_i == 0
+			result = JSON.parse(jsonResult)
+			droplets = result["droplets"]
+			apps = Hash.new
+			droplets.each { |appguid, droplet|
+				app = @client.app appguid
+				apps[appguid] = app
+			}
+			erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
+				erb :appstats, :locals => {:apperror => false, :appstats => droplets, :appinfo => apps}
+			end
+		else
+			redirect to("/appstats/error")
+		end
+	end
+
+	get '/appstats/:guid' do   |guid|
+		if @@config["stats_uri"].nil?
+			redirect to("/appstats/error")
+		end
+
+		jsonResult = `curl -s #{@@config["stats_uri"]}`
+		if $?.to_i == 0
+			result = JSON.parse(jsonResult)
+			droplets = result["droplets"]
+			droplet = droplets[guid]
+			app = @client.app guid
+			erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
+				erb :appstats, :locals => {:apperror => false, :droplet => droplet, :app => app}
+			end
+		else
+			redirect to("/appstats/error")
+		end
+	end
+
+	get '/appstats/error' do
+		erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
+			erb :appstats, :locals => {:apperror => true}
+		end
+	end
+
 	get '/db' do
 		dbclient = MysqlUtil.new(@@config['mysql'])
 		result = dbclient.listUserDB(usernameFromEmail(@current_user.email))
 		adminUrl = @@config["mysql_admin"]
+		dbUrl = @@config["mysql"]["host"] + ":" + @@config["mysql"]["port"].to_s
 
 		erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
-			erb :database, :locals => {:databases => result, :dbadmin => adminUrl.to_s}
+			erb :database, :locals => {:databases => result, :dbadmin => adminUrl.to_s, :dburl => dbUrl}
 		end
 	end
 

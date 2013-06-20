@@ -1,0 +1,131 @@
+<div class="main" id="appstats">
+  <% if apperror %>
+      <div class="container org-container">
+        <div class="container-header">
+          <h2>没有检测到APPLICATION，请检查您是否配置正确，或稍后再试</h2>
+        </div>
+      </div>
+  <% elsif appguid.nil? %>
+      <div class="container org-container">
+        <div class="container-header">
+          <h2><span>全部App状态信息列表</span></h2>
+        </div>
+
+        <table>
+          <thead>
+          <tr>
+            <th width="15%">Guid</th>
+            <th width="10%">Name</th>
+            <th width="20%">Url</th>
+            <th width="10%">Package State</th>
+            <th width="10%">Runtime State</th>
+            <th width="10%">Instace Number</th>
+            <th width="15%">Detail</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% for guid, droplet in appstats %>
+              <% app = appinfo[guid] %>
+              <tr>
+                <td><%= guid %></td>
+                <td><%= app.name %></td>
+                <td>
+                  <% for route in app.routes %>
+                      <span><a href="http://<%= route.name %>"><%= route.name %></a></span>
+                  <% end %>
+                </td>
+                <td><%= droplet["package_state"] %></td>
+                <td><%= droplet["state"] %></td>
+                <td><%= droplet["num_instances"] %></td>
+                <td><span><a href="/appstats/<%= guid %>">Detail</a></span></td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+  <% else %>
+      <div class="container org-container">
+        <div class="container-header">
+          <h2><span><%= app.name %> (<%= appguid %>) 状态信息</span></h2>
+
+          <h3>URL :
+            <% for route in app.routes %>
+                <a href="http://<%= route.name %>"><%= route.name %></a>
+            <% end %>
+          </h3>
+
+          <h3>
+            Memory : <%= app.memory %> MB
+          </h3>
+
+          <h3>
+            Disk Quota : <%= app.disk_quota %> MB
+          </h3>
+
+          <h3>
+            Buildpack : <a
+          <% if app.detected_buildpack == "PHP" %>
+          class="php"
+          <% elsif app.detected_buildpack == "Python" %>
+          class="python"
+          <% elsif app.detected_buildpack == "Ant Java Web" %>
+          class="java"
+          <% else %>
+          class="unknown"
+          <% end %>
+          href="/app/<%= app.guid %>"><%= app.name %></a>
+          </h3>
+
+          <h3>
+            Package State : <%= droplet["package_state"] %>
+          </h3>
+
+          <h3>
+            Running State : <%= droplet["state"] %>
+          </h3>
+
+          <h3>
+            Instance Numbser : <%= droplet["num_instances"] %>
+          </h3>
+
+          <h3>
+            Crash Number : <%= droplet["crashes"].size %>
+          </h3>
+
+          <h3>
+            Extra Instances Number : <%= droplet["extra_instances"].size %>
+          </h3>
+
+          <h3>
+            All Instances:
+          </h3>
+        </div>
+      </div>
+      <% for version, instances in droplet["versions"] %>
+          <h4>Version : <%= version %></h4>
+          <table>
+            <thead>
+            <tr>
+              <th width="10%">No</th>
+              <th width="25%">State</th>
+              <th width="25%">Crashes</th>
+              <th width="40%">InstanceID</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% for no, instance in instances %>
+                <td><%= no %></td>
+                <td><%= instance["state"] %></td>
+                <td><%= instance["crashes"] %></td>
+                <td><%= instance["instance"] %></td>
+                </tr>
+            <% end %>
+            </tbody>
+          </table>
+      <% end %>
+      <p>
+        <a href="/appstats" class="button green"> 返回查看全部App列表 </a>
+      </p>
+  <% end %>
+
+</div>

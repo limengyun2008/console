@@ -13,10 +13,11 @@
         <table>
           <thead>
           <tr>
-            <th width="25%">DB Name</th>
-            <th width="25%">DB User</th>
-            <th width="25%">DB Password</th>
-            <th width="25%" class="center">Remove</th>
+            <th width="20%">DB Name</th>
+            <th width="20%">DB User</th>
+            <th width="20%">DB Password</th>
+            <th width="30%">DB Url</th>
+            <th width="10%" class="center">Remove</th>
           </tr>
           </thead>
           <tbody>
@@ -25,6 +26,7 @@
                 <td><%= row["db_name"] %></td>
                 <td><%= row["db_name"] %></td>
                 <td><%= row["db_passwd"] %></td>
+                <td><%=dburl%></td>
                 <td class="center">
                   <a href="/db/<%= row["db_name"] %>/<%= row["db_passwd"] %>" class="button green">Remove</a>
                 </td>

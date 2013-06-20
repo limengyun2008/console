@@ -7,6 +7,8 @@ mysql:
   password: 123
 mysql_admin: http://phpadmin.zhaodch.cf2.youdao.com/index.php
 
+stats_uri: http://varz:varz@10.168.3.155:54321/varz
+
 svn:
   app_base: #
   template_base: #
