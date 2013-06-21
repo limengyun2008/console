@@ -283,13 +283,18 @@ class Server < Sinatra::Base
 			result = JSON.parse(jsonResult)
 			droplets = result["droplets"]
 			droplets.each { |appguid, droplet|
-				app = @client.app appguid
-				droplet["appname"] = app.name
-				droplet["route"] = ""
-
 				begin
-					droplet["route"] = app.url
+					app = @client.app appguid
+					droplet["appname"] = app.name
+					droplet["route"] = ""
+
+					begin
+						droplet["route"] = app.url
+					rescue => e
+					end
+
 				rescue => e
+					puts "Deleting APP" + appguid
 				end
 			}
 			erb :layout, :layout => :base, :locals => {:current_user => @current_user} do

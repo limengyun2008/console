@@ -87,36 +87,32 @@
           All Instances:
         </h3>
 
-      </div>
-      <% for version, instances in droplet["versions"] %>
-          <br/>
-          <h4>Version : <%= version %></h4>
-          <table>
-            <thead>
-            <tr>
-              <th width="10%">No</th>
-              <th width="25%">State</th>
-              <th width="25%">Crashes</th>
-              <th width="40%">InstanceID</th>
-            </tr>
-            </thead>
-            <tbody>
-            <% for no, instance in instances["instances"] %>
-                <tr>
-                  <td><%= no %></td>
-                  <td><%= instance["state"] %></td>
-                  <td><%= instance["crashes"] %></td>
-                  <td><%= instance["instance"] %></td>
-                </tr>
+        <script>
+            var GLOBAL = {
+                app_guid: '<%=app.guid %>'
+            }
+        </script>
+        <div class="contents">
+          <div class="tab-content active" id="control">
+
+            <div id="instances-area">
+              <img src="/image/loader.gif"/><span>querying</span>
+            </div>
+
+            <% if app.state == "STARTED" %>
+                <button class="big red" id="stop-app-admin">Stop This App</button>
+                <button class="big blue" id="restart-app-admin">Restart This App</button>
+            <% elsif app.state == "STOPED" %>
+                <button class="big green" id="start-app-admin">Start This App</button>
             <% end %>
-            </tbody>
-          </table>
-      <% end %>
-      <br/>
+            <button class="big red" id="delete-app-admin">Delete This App</button>
+          </div>
+        </div>
 
-      <p>
-        <a href="/appstats" class="button green"> 返回查看全部App列表 </a>
-      </p>
+        <p>
+          <a href="/appstats" class="button green"> 返回查看全部App列表 </a>
+        </p>
+
+      </div>
   <% end %>
-
 </div>

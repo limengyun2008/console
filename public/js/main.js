@@ -73,6 +73,59 @@
         $("#" + active).addClass("active");
     });
 
+    $("#start-app-admin").on("click", function (e) {
+        $.ajax({
+            url: '/app/' + GLOBAL.app_guid,
+            method: "POST",
+            data: {"action":"start"},
+            success: function (data) {
+                location.href = "/appstats/" + GLOBAL.app_guid;
+            },
+            error: function () {
+                location.href = "/appstats/" + GLOBAL.app_guid;
+            }
+        });
+    });
+    $("#stop-app-admin").on("click", function (e) {
+        $.ajax({
+            url: '/app/' + GLOBAL.app_guid,
+            method: "POST",
+            data: {"action":"stop"},
+            success: function (data) {
+                location.href = "/appstats/" + GLOBAL.app_guid;
+            },
+            error: function () {
+                location.href = "/appstats/" + GLOBAL.app_guid;
+            }
+        });
+    });
+    $("#restart-app-admin").on("click", function (e) {
+        $.ajax({
+            url: '/app/' + GLOBAL.app_guid,
+            method: "POST",
+            data: {"action":"restart"},
+            success: function (data) {
+                location.href = "/appstats/" + GLOBAL.app_guid;
+            },
+            error: function () {
+                location.href = "/appstats/" + GLOBAL.app_guid;
+            }
+        });
+    });
+    $("#delete-app-admin").on("click", function (e) {
+        $.ajax({
+            url: '/app/' + GLOBAL.app_guid,
+            method: "POST",
+            data: {"action":"delete"},
+            success: function (data) {
+                location.href = "/appstats";
+            },
+            error: function () {
+                location.href = "/appstats";
+            }
+        });
+    });
+
     $("#delete-app").on("click", function (e) {
         $("#model, #model-mask").show();
     });
