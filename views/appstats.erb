@@ -15,7 +15,7 @@
           <thead>
           <tr>
             <th width="15%">Guid</th>
-            <th width="10%">Name</th>
+            <th width="10%">App Name</th>
             <th width="20%">Url</th>
             <th width="10%">Package State</th>
             <th width="10%">Runtime State</th>
@@ -28,7 +28,7 @@
               <tr>
                 <td><%= guid %></td>
                 <td><%= droplet["appname"] %></td>
-                <td><%= droplet["route"] %></td>
+                <td><a href="http://<%= droplet["route"] %>"><%= droplet["route"] %></a></td>
                 <td><%= droplet["package_state"] %></td>
                 <td><%= droplet["state"] %></td>
                 <td><%= droplet["num_instances"] %></td>
@@ -44,12 +44,12 @@
           <h2>APP: <%= app.name %> (<%= appguid %>) 状态信息</h2>
         </div>
         <h3>URL :
-          <% for route in app.routes %>
-              <% begin %>
-                <a href="http://<%= route.name %>"><%= route.name %></a>
-              <% rescue => e %>
-                  No Route
+          <% begin %>
+              <% for route in app.routes %>
+                  <a href="http://<%= route.name %>"><%= route.name %></a>
               <% end %>
+          <% rescue => e %>
+              No Route
           <% end %>
         </h3>
 
@@ -64,7 +64,7 @@
         </h3>
 
         <h3>
-          Buildpack : <%= app.detected_buildpack%>
+          Buildpack : <%= app.detected_buildpack %>
         </h3>
 
         <h3>
