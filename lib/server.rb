@@ -285,7 +285,7 @@ class Server < Sinatra::Base
 			droplets.each { |appguid, droplet|
 				app = @client.app appguid
 				droplet["appname"] = app.name
-				droplet["route"] = "No Route"
+				droplet["route"] = ""
 
 				begin
 					droplet["route"] = app.url
@@ -311,6 +311,14 @@ class Server < Sinatra::Base
 			droplets = result["droplets"]
 			droplet = droplets[guid]
 			app = @client.app guid
+			droplet["route"] = "No Route"
+			droplet["alive"] = true
+			begin
+				droplet["route"] = app.url
+			rescue => e
+				droplet["alive"] = false
+			end
+
 			erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
 				erb :appstats, :locals => {:apperror => false, :appguid => guid, :droplet => droplet, :app => app}
 			end

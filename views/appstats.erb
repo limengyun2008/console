@@ -43,17 +43,13 @@
         <div class="container-header">
           <h2>APP: <%= app.name %> (<%= appguid %>) 状态信息</h2>
         </div>
-        <h3>URL :
-          <% begin %>
-              <% for route in app.routes %>
-                  <a href="http://<%= route.name %>"><%= route.name %></a>
-              <% end %>
-          <% rescue => e %>
-              No Route
-          <% end %>
-        </h3>
+        <h3>URL : <%=droplet["route"] %></h3>
 
-        <h3>Console : <a href="/app/<%= app.guid %>" class="button green"><%= app.name %>控制台</a></h3>
+        <% if droplet["alive"] %>
+            <h3>Console : <a href="/app/<%= app.guid %>" class="button green"><%= app.name %>控制台</a></h3>
+        <% else %>
+            <h3>Console : APP当前不可访问，没有可用的控制台</h3>
+        <% end %>
 
         <h3>
           Memory : <%= app.memory %> MB
@@ -116,6 +112,27 @@
             </tbody>
           </table>
       <% end %>
+
+      <% if app.state == "STARTED" %>
+          <form action="/app/<%=app.guid %>" method="post">
+            <input type="hidden" name="action" value="stop" />
+            <button class="big red ">Stop</button>
+          </form>
+          <form action="/app/<%=app.guid %>" method="post">
+            <input type="hidden" name="action" value="restart" />
+            <button class="big blue">Restart</button>
+          </form>
+      <% else  app.state == "STOPED" %>
+          <form action="/app/<%=app.guid %>" method="post">
+            <button class="big green">Start</button>
+            <input type="hidden" name="action" value="start" />
+          </form>
+      <% end %>
+      <form action="/app/<%=app.guid %>" method="post">
+        <button class="big red">Delete this app</button>
+        <input type="hidden" name="action" value="delete" />
+      </form>
+
       <p>
         <a href="/appstats" class="button green"> 返回查看全部App列表 </a>
       </p>
