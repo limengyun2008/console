@@ -25,15 +25,17 @@
           </thead>
           <tbody>
           <% for guid, droplet in appstats %>
-              <tr>
-                <td><%= guid %></td>
-                <td><%= droplet["appname"] %></td>
-                <td><a href="http://<%= droplet["route"] %>"><%= droplet["route"] %></a></td>
-                <td><%= droplet["package_state"] %></td>
-                <td><%= droplet["state"] %></td>
-                <td><%= droplet["num_instances"] %></td>
-                <td><span><a href="/appstats/<%= guid %>">Detail</a></span></td>
-              </tr>
+              <% if !droplet["deleting"] %>
+                  <tr>
+                    <td><%= guid %></td>
+                    <td><%= droplet["appname"] %></td>
+                    <td><a href="http://<%= droplet["route"] %>"><%= droplet["route"] %></a></td>
+                    <td><%= droplet["package_state"] %></td>
+                    <td><%= droplet["state"] %></td>
+                    <td><%= droplet["num_instances"] %></td>
+                    <td><span><a href="/appstats/<%= guid %>">Detail</a></span></td>
+                  </tr>
+              <% end %>
           <% end %>
           </tbody>
         </table>
@@ -98,16 +100,19 @@
             <div id="instances-area">
               <img src="/image/loader.gif"/><span>querying</span>
             </div>
+            <hr/>
 
             <% if app.state == "STARTED" %>
                 <button class="big red" id="stop-app-admin">Stop This App</button>
                 <button class="big blue" id="restart-app-admin">Restart This App</button>
-            <% elsif app.state == "STOPED" %>
+            <% elsif app.state == "STOPPED" %>
                 <button class="big green" id="start-app-admin">Start This App</button>
             <% end %>
             <button class="big red" id="delete-app-admin">Delete This App</button>
+            <hr/>
           </div>
         </div>
+        <br/>
 
         <p>
           <a href="/appstats" class="button green"> 返回查看全部App列表 </a>

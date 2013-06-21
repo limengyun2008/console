@@ -287,6 +287,7 @@ class Server < Sinatra::Base
 					app = @client.app appguid
 					droplet["appname"] = app.name
 					droplet["route"] = ""
+					droplet["deleting"] = false
 
 					begin
 						droplet["route"] = app.url
@@ -295,6 +296,7 @@ class Server < Sinatra::Base
 
 				rescue => e
 					puts "Deleting APP" + appguid
+					droplet["deleting"] = true
 				end
 			}
 			erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
