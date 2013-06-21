@@ -41,13 +41,19 @@
   <% else %>
       <div class="container org-container">
         <div class="container-header">
-          <h2><%= app.name %> (<%= appguid %>) 状态信息</h2>
+          <h2>APP: <%= app.name %> (<%= appguid %>) 状态信息</h2>
         </div>
         <h3>URL :
           <% for route in app.routes %>
-              <a href="http://<%= route.name %>"><%= route.name %></a>
+              <% begin %>
+                <a href="http://<%= route.name %>"><%= route.name %></a>
+              <% rescue => e %>
+                  No Route
+              <% end %>
           <% end %>
         </h3>
+
+        <h3>Console : <a href="/app/<%= app.guid %>" class="button green"><%= app.name %>控制台</a></h3>
 
         <h3>
           Memory : <%= app.memory %> MB
@@ -58,17 +64,7 @@
         </h3>
 
         <h3>
-          Buildpack : <a
-        <% if app.detected_buildpack == "PHP" %>
-        class="php"
-        <% elsif app.detected_buildpack == "Python" %>
-        class="python"
-        <% elsif app.detected_buildpack == "Ant Java Web" %>
-        class="java"
-        <% else %>
-        class="unknown"
-        <% end %>
-        href="/app/<%= app.guid %>"><%= app.name %></a>
+          Buildpack : <%= app.detected_buildpack%>
         </h3>
 
         <h3>
@@ -109,7 +105,7 @@
             </tr>
             </thead>
             <tbody>
-            <% for no, instance in instances %>
+            <% for no, instance in instances["instances"] %>
                 <tr>
                   <td><%= no %></td>
                   <td><%= instance["state"] %></td>

@@ -290,7 +290,6 @@ class Server < Sinatra::Base
 				begin
 					droplet["route"] = app.url
 				rescue => e
-					puts app.routes.to_a.inspect
 				end
 			}
 			erb :layout, :layout => :base, :locals => {:current_user => @current_user} do
